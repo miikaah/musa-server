@@ -3,12 +3,10 @@ import fuzzysort from "fuzzysort";
 import UrlSafeBase64 from "urlsafe-base64";
 import { traverseFileSystem } from "./fs";
 import {
-  separateArtists,
-  separateAlbums,
-  separateSongs,
-  separateImages,
-  createArtistCollection,
+  createMediaCollection,
   ArtistCollection,
+  AlbumCollection,
+  FileCollection,
 } from "./media-separator";
 
 const PORT = process.env.PORT || 4200;
@@ -63,12 +61,10 @@ app.get("/file/:name", (req: Request<{ name: string }>, res, next) => {
   });
 });
 
-let artists: string[] = [];
-let albums: string[] = [];
-let songs: string[] = [];
-let images: string[] = [];
-
 let artistCollection: ArtistCollection = {};
+let albumCollection: AlbumCollection = {};
+let songCollection: FileCollection = {};
+let imageCollection: FileCollection = {};
 
 const logOpStart = (title: string) => {
   console.log(title);
@@ -82,6 +78,10 @@ const logOpReport = (start: number, collection: string[], name: string) => {
 };
 
 const start = async () => {
+  if (NODE_ENV === "test") {
+    return;
+  }
+
   const totalStart = Date.now();
 
   logOpStart("Traversing file system");
@@ -89,41 +89,27 @@ const start = async () => {
   files = await traverseFileSystem(srcPath);
   logOpReport(start, files, "files");
 
-  logOpStart("Separating artists from files");
+  logOpStart("Creating media collection");
   start = Date.now();
-  artists = separateArtists(files);
-  logOpReport(start, artists, "artists");
-
-  logOpStart("Separating albums from files");
-  start = Date.now();
-  albums = separateAlbums(files);
-  logOpReport(start, albums, "albums");
-
-  logOpStart("Separating songs from files");
-  start = Date.now();
-  songs = separateSongs(files);
-  logOpReport(start, songs, "songs");
-
-  logOpStart("Separating images from files");
-  start = Date.now();
-  images = separateImages(files);
-  logOpReport(start, images, "images");
-
-  logOpStart("Creating artist collection");
-  start = Date.now();
-  artistCollection = createArtistCollection(files);
+  const { artistsCol, albumsCol, songsCol, imagesCol } = createMediaCollection(files);
+  artistCollection = artistsCol;
+  albumCollection = albumsCol;
+  songCollection = songsCol;
+  imageCollection = imagesCol;
   console.log(`Took: ${(Date.now() - start) / 1000} seconds`);
+  console.log(`Found: ${Object.keys(artistCollection).length} artists`);
+  console.log(`Found: ${Object.keys(albumCollection).length} albums`);
+  console.log(`Found: ${Object.keys(songCollection).length} songs`);
+  console.log(`Found: ${Object.keys(imageCollection).length} images`);
   console.log("----------------------\n");
 
-  if (NODE_ENV !== "test") {
-    app.listen(PORT, () => {
-      logOpStart("Startup Report");
-      console.log(`Took: ${(Date.now() - totalStart) / 1000} seconds total`);
-      console.log("----------------------\n");
+  app.listen(PORT, () => {
+    logOpStart("Startup Report");
+    console.log(`Took: ${(Date.now() - totalStart) / 1000} seconds total`);
+    console.log("----------------------\n");
 
-      console.log(`Serving http://localhost:${PORT}`);
-    });
-  }
+    console.log(`Serving http://localhost:${PORT}\n`);
+  });
 };
 
 start();

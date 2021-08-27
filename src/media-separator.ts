@@ -1,107 +1,123 @@
-import { sep } from "path";
-import { audioExts, imageExts } from "./fs";
-import { inspect } from "util";
+import path, { sep } from "path";
+import { imageExts } from "./fs";
 import UrlSafeBase64 from "urlsafe-base64";
 
-export const separateArtists = (files: string[]): string[] => {
-  const artists = new Set<string>();
-
-  for (const f of files) {
-    artists.add(f.split(sep)[0]);
-  }
-
-  return Array.from(artists);
-};
-
-export const separateAlbums = (files: string[]): string[] => {
-  const albums = new Set<string>();
-
-  for (const f of files) {
-    const album = f.split(sep);
-    album.splice(album.length - 1, 1);
-    albums.add(album.join(sep));
-  }
-
-  return Array.from(albums);
-};
-
-export const separateSongs = (files: string[]): string[] => {
-  return files.filter((f) => audioExts.some((e) => f.toLowerCase().endsWith(e)));
-};
-
-export const separateImages = (files: string[]): string[] => {
-  return files.filter((f) => imageExts.some((e) => f.toLowerCase().endsWith(e)));
-};
-
-export type Artist = {
-  id: string;
-  name: string;
-  albums: {
-    [x: string]: Album;
-  };
-  files: File[];
-};
-
-export type Album = {
-  id: string;
-  name: string;
-  files: File[];
-};
-
-export type File = {
-  id: string;
-  name: string;
+export type MediaCollection = {
+  artistsCol: ArtistCollection;
+  albumsCol: AlbumCollection;
+  songsCol: FileCollection;
+  imagesCol: FileCollection;
 };
 
 export type ArtistCollection = {
-  [x: string]: Artist;
+  [x: string]: ArtistWithAlbums;
 };
 
-export const createArtistCollection = (files: string[]): ArtistCollection => {
-  const map: ArtistCollection = {};
+type idNamePair = {
+  [x: string]: string;
+};
+
+type ArtistWithAlbums = {
+  name: string;
+  albums?: idNamePair;
+  files: idNamePair;
+};
+
+export type AlbumCollection = {
+  [x: string]: AlbumWithFiles;
+};
+
+type AlbumWithFiles = {
+  artistName: string;
+  name: string;
+  files: idNamePair;
+};
+
+export type FileCollection = {
+  [x: string]: FileWithInfo;
+};
+
+type FileWithInfo = {
+  name: string;
+  artistName: string;
+  artistId: string;
+  albumName?: string;
+  albumId?: string;
+};
+
+const isImage = (filename: string) => {
+  return imageExts.some((e) => filename.toLowerCase().endsWith(e));
+};
+
+export const createMediaCollection = (files: string[]): MediaCollection => {
+  const artistsCol: ArtistCollection = {};
+  const albumsCol: AlbumCollection = {};
+  const songsCol: FileCollection = {};
+  const imagesCol: FileCollection = {};
 
   for (const file of files) {
     const [artistName, ...rest] = file.split(sep);
+    const artistId = encodeToUrlSafeBase64(artistName);
+    const fileId = encodeToUrlSafeBase64(file);
 
-    if (!map[artistName]) {
-      map[artistName] = {
-        id: encodeToUrlSafeBase64(artistName),
+    if (!artistsCol[artistId]) {
+      artistsCol[artistId] = {
         name: artistName,
         albums: {},
-        files: [],
+        files: {},
       };
     }
 
     if (rest.length === 1) {
-      map[artistName].files.push(
-        ...rest.map((r) => ({
-          id: encodeToUrlSafeBase64(file),
-          name: r,
-        }))
-      );
+      rest.forEach((name) => {
+        const obj = {
+          name,
+          artistName,
+          artistId,
+        };
+        if (isImage(name)) {
+          imagesCol[fileId] = obj;
+        } else {
+          artistsCol[artistId].files[fileId] = name;
+          songsCol[fileId] = obj;
+        }
+      });
     } else {
       const [albumName, ...albumRest] = rest;
+      const albumId = encodeToUrlSafeBase64(path.join(artistName, albumName));
+      const fileName = albumRest[albumRest.length - 1];
 
-      if (!map[artistName].albums) {
-        map[artistName].albums = {};
-      }
-
-      if (!map[artistName].albums[albumName]) {
-        map[artistName].albums[albumName] = {
-          id: encodeToUrlSafeBase64(albumName),
+      if (!albumsCol[albumId]) {
+        albumsCol[albumId] = {
           name: albumName,
-          files: [],
+          artistName,
+          files: {},
         };
       }
-      map[artistName].albums[albumName].files.push({
-        id: encodeToUrlSafeBase64(file),
-        name: albumRest[albumRest.length - 1],
-      });
+
+      artistsCol[artistId].albums = {
+        ...artistsCol[artistId].albums,
+        [albumId]: albumName,
+      };
+
+      albumsCol[albumId].files[fileId] = fileName;
+
+      const obj = {
+        name: fileName,
+        artistName,
+        artistId,
+        albumName,
+        albumId,
+      };
+      if (isImage(fileName)) {
+        imagesCol[fileId] = obj;
+      } else {
+        songsCol[fileId] = obj;
+      }
     }
   }
-  console.log(inspect(map["CMX"], false, 10, true));
 
-  return map;
+  return { artistsCol, albumsCol, songsCol, imagesCol };
 };
 
 const encodeToUrlSafeBase64 = (s: string) => {
