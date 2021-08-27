@@ -36,5 +36,9 @@ yarn-error.log*
 # husky
 .husky
 
+# build files
 dist
 esbuild
+
+# env files
+.env*
