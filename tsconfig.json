@@ -11,5 +11,5 @@
     "baseUrl": "."
   },
   "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules", "./src/jestSetup.ts", "./src/**/*.spec.ts"]
+  "exclude": ["node_modules", "./src/jestSetup.ts"]
 }

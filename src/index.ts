@@ -1,12 +1,15 @@
 import express from "express";
 
 const PORT = process.env.PORT || 3003;
-const app = express();
+const { NODE_ENV } = process.env;
+export const app = express();
 
 app.use(express.json());
 
-app.use("/", (_req, res) => {
+app.use("/hello", (_req, res) => {
   res.send("Hello");
 });
 
-app.listen(PORT, () => console.log(`Serving http://localhost:${PORT}`));
+if (NODE_ENV !== "test") {
+  app.listen(PORT, () => console.log(`Serving http://localhost:${PORT}`));
+}
