@@ -1,6 +1,4 @@
-import express, { Request } from "express";
-import fuzzysort from "fuzzysort";
-import UrlSafeBase64 from "./urlsafe-base64";
+import { app } from "./api";
 import { traverseFileSystem } from "./fs";
 import {
   createMediaCollection,
@@ -9,57 +7,9 @@ import {
   FileCollection,
 } from "./media-separator";
 
-const PORT = process.env.PORT || 4200;
-const { NODE_ENV, MUSA_SRC_PATH } = process.env;
-const srcPath = MUSA_SRC_PATH || "";
+const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200 } = process.env;
 
-export const app = express();
-
-app.use(express.json());
-
-app.get("/hello", (_req, res) => {
-  res.send("Hello");
-});
-
-let files: string[] = [];
-app.get("/find/files/:name", (req: Request<{ name: string }>, res) => {
-  const { name } = req.params;
-
-  const foundFiles = fuzzysort.go(name, files, { limit: 50, threshold: -999 });
-
-  if (foundFiles.total) {
-    const results = foundFiles.map((f) => {
-      const { target: path } = f;
-
-      return {
-        path,
-        id: UrlSafeBase64.encode(path),
-      };
-    });
-
-    res.status(200).json({ results });
-
-    return;
-  }
-
-  res.status(200).json({ results: [] });
-});
-
-app.get("/file/:name", (req: Request<{ name: string }>, res, next) => {
-  const { name } = req.params;
-  const filename = UrlSafeBase64.decode(name);
-  const options = {
-    root: srcPath,
-  };
-  console.log(filename);
-
-  res.sendFile(filename, options, (err) => {
-    if (err) {
-      next(err);
-    }
-  });
-});
-
+export let files: string[] = [];
 let artistCollection: ArtistCollection = {};
 let albumCollection: AlbumCollection = {};
 let songCollection: FileCollection = {};
@@ -85,7 +35,7 @@ const start = async () => {
 
   logOpStart("Traversing file system");
   let start = Date.now();
-  files = await traverseFileSystem(srcPath);
+  files = await traverseFileSystem(MUSA_SRC_PATH);
   logOpReport(start, files, "files");
 
   logOpStart("Creating media collection");

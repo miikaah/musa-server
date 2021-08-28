@@ -1,4 +1,4 @@
-import { app } from "./";
+import { app } from "./api";
 import supertest from "supertest";
 
 const request = supertest(app);
