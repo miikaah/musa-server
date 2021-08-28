@@ -5,6 +5,7 @@ import {
   ArtistCollection,
   AlbumCollection,
   FileCollection,
+  File,
 } from "./media-separator";
 
 const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
@@ -16,6 +17,7 @@ export let artistCollection: ArtistCollection = {};
 export let albumCollection: AlbumCollection = {};
 export let songCollection: FileCollection = {};
 export let imageCollection: FileCollection = {};
+export let artistList: File[];
 
 const logOpStart = (title: string) => {
   console.log(title);
@@ -47,6 +49,9 @@ const start = async () => {
   albumCollection = albumsCol;
   songCollection = songsCol;
   imageCollection = imagesCol;
+
+  artistList = Object.values(artistCollection).map(({ name, url }) => ({ name, url }));
+
   console.log(`Took: ${(Date.now() - start) / 1000} seconds`);
   console.log(`Found: ${Object.keys(artistCollection).length} artists`);
   console.log(`Found: ${Object.keys(albumCollection).length} albums`);

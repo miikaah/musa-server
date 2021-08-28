@@ -1,6 +1,6 @@
 import { app } from "../api";
 import { Request } from "express";
-import { artistCollection } from "../";
+import { artistCollection, artistList } from "../";
 
 app.get("/artist/:id", (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
@@ -12,4 +12,8 @@ app.get("/artist/:id", (req: Request<{ id: string }>, res) => {
   }
 
   res.status(200).json(artist);
+});
+
+app.get("/artist", (_req, res) => {
+  res.status(200).json(artistList);
 });

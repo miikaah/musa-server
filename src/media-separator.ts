@@ -13,12 +13,13 @@ export type ArtistCollection = {
   [x: string]: ArtistWithAlbums;
 };
 
-type File = {
+export type File = {
   name: string;
   url: string;
 };
 
 type ArtistWithAlbums = {
+  url: string;
   name: string;
   albums?: File[];
   files: File[];
@@ -73,6 +74,7 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
 
     if (!artistsCol[artistId]) {
       artistsCol[artistId] = {
+        url: artistUrl,
         name: artistName,
         albums: [],
         files: [],
