@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch ./src --ext ts --exec env-cmd ts-node --transpile-only src/index.ts",
+    "dev": "nodemon --watch ./src --ext ts --exec ./node_modules/.bin/env-cmd ./node_modules/.bin/ts-node --transpile-only src/index.ts",
     "tsc:w": "tsc --watch --noEmit",
     "test:w": "jest --watch"
   },
