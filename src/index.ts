@@ -12,10 +12,10 @@ const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env
 export const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
 
 export let files: string[] = [];
-let artistCollection: ArtistCollection = {};
-let albumCollection: AlbumCollection = {};
-let songCollection: FileCollection = {};
-let imageCollection: FileCollection = {};
+export let artistCollection: ArtistCollection = {};
+export let albumCollection: AlbumCollection = {};
+export let songCollection: FileCollection = {};
+export let imageCollection: FileCollection = {};
 
 const logOpStart = (title: string) => {
   console.log(title);
@@ -42,7 +42,7 @@ const start = async () => {
 
   logOpStart("Creating media collection");
   start = Date.now();
-  const { artistsCol, albumsCol, songsCol, imagesCol } = createMediaCollection(files);
+  const { artistsCol, albumsCol, songsCol, imagesCol } = createMediaCollection(files, baseUrl);
   artistCollection = artistsCol;
   albumCollection = albumsCol;
   songCollection = songsCol;

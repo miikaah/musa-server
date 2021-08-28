@@ -5,50 +5,75 @@ Object {
   "albumsCol": Object {
     "YXJ0aXN0L2FsYnVt": Object {
       "artistName": "artist",
-      "files": Object {
-        "YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw": "cover.JPG",
-        "YXJ0aXN0L2FsYnVtL3NvbmcubXAz": "song.mp3",
-      },
+      "artistUrl": "baseurl/artist/YXJ0aXN0",
+      "files": Array [
+        Object {
+          "name": "song.mp3",
+          "url": "baseurl/song/YXJ0aXN0L2FsYnVtL3NvbmcubXAz",
+        },
+      ],
+      "images": Array [
+        Object {
+          "name": "cover.JPG",
+          "url": "baseurl/image/YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw",
+        },
+      ],
       "name": "album",
     },
   },
   "artistsCol": Object {
     "YXJ0aXN0": Object {
-      "albums": Object {
-        "YXJ0aXN0L2FsYnVt": "album",
-      },
-      "files": Object {
-        "YXJ0aXN0L3NvbmcubXAz": "song.mp3",
-      },
+      "albums": Array [
+        Object {
+          "name": "album",
+          "url": "baseurl/album/YXJ0aXN0L2FsYnVt",
+        },
+      ],
+      "files": Array [
+        Object {
+          "name": "song.mp3",
+          "url": "baseurl/song/YXJ0aXN0L3NvbmcubXAz",
+        },
+      ],
+      "images": Array [
+        Object {
+          "name": "image.PNG",
+          "url": "baseurl/image/YXJ0aXN0L2ltYWdlLlBORw",
+        },
+      ],
       "name": "artist",
     },
   },
   "imagesCol": Object {
     "YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw": Object {
-      "albumId": "YXJ0aXN0L2FsYnVt",
       "albumName": "album",
-      "artistId": "YXJ0aXN0",
+      "albumUrl": "baseurl/album/YXJ0aXN0L2FsYnVt",
       "artistName": "artist",
+      "artistUrl": "baseurl/artist/YXJ0aXN0",
       "name": "cover.JPG",
+      "url": "baseurl/file/YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw",
     },
     "YXJ0aXN0L2ltYWdlLlBORw": Object {
-      "artistId": "YXJ0aXN0",
       "artistName": "artist",
+      "artistUrl": "baseurl/artist/YXJ0aXN0",
       "name": "image.PNG",
+      "url": "baseurl/file/YXJ0aXN0L2ltYWdlLlBORw",
     },
   },
   "songsCol": Object {
     "YXJ0aXN0L2FsYnVtL3NvbmcubXAz": Object {
-      "albumId": "YXJ0aXN0L2FsYnVt",
       "albumName": "album",
-      "artistId": "YXJ0aXN0",
+      "albumUrl": "baseurl/album/YXJ0aXN0L2FsYnVt",
       "artistName": "artist",
+      "artistUrl": "baseurl/artist/YXJ0aXN0",
       "name": "song.mp3",
+      "url": "baseurl/file/YXJ0aXN0L2FsYnVtL3NvbmcubXAz",
     },
     "YXJ0aXN0L3NvbmcubXAz": Object {
-      "artistId": "YXJ0aXN0",
       "artistName": "artist",
+      "artistUrl": "baseurl/artist/YXJ0aXN0",
       "name": "song.mp3",
+      "url": "baseurl/file/YXJ0aXN0L3NvbmcubXAz",
     },
   },
 }

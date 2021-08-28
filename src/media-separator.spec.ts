@@ -10,7 +10,7 @@ const fixture = [
 describe("Media Separator", () => {
   describe("createMediaCollection()", () => {
     it("should separate files to collections", async () => {
-      expect(createMediaCollection(fixture)).toMatchSnapshot();
+      expect(createMediaCollection(fixture, "baseurl")).toMatchSnapshot();
     });
   });
 });

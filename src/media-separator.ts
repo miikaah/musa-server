@@ -13,14 +13,16 @@ export type ArtistCollection = {
   [x: string]: ArtistWithAlbums;
 };
 
-type idNamePair = {
-  [x: string]: string;
+type File = {
+  name: string;
+  url: string;
 };
 
 type ArtistWithAlbums = {
   name: string;
-  albums?: idNamePair;
-  files: idNamePair;
+  albums?: File[];
+  files: File[];
+  images: File[];
 };
 
 export type AlbumCollection = {
@@ -29,8 +31,10 @@ export type AlbumCollection = {
 
 type AlbumWithFiles = {
   artistName: string;
+  artistUrl: string;
   name: string;
-  files: idNamePair;
+  files: File[];
+  images: File[];
 };
 
 export type FileCollection = {
@@ -40,82 +44,117 @@ export type FileCollection = {
 type FileWithInfo = {
   name: string;
   artistName: string;
-  artistId: string;
+  artistUrl: string;
   albumName?: string;
-  albumId?: string;
+  albumUrl?: string;
+  url: string;
 };
 
 const isImage = (filename: string) => {
   return imageExts.some((e) => filename.toLowerCase().endsWith(e));
 };
 
-export const createMediaCollection = (files: string[]): MediaCollection => {
+export const createMediaCollection = (files: string[], baseUrl: string): MediaCollection => {
   const artistsCol: ArtistCollection = {};
   const albumsCol: AlbumCollection = {};
   const songsCol: FileCollection = {};
   const imagesCol: FileCollection = {};
 
+  const albumSet = new Set();
+
   for (const file of files) {
     const [artistName, ...rest] = file.split(sep);
     const artistId = UrlSafeBase64.encode(artistName);
+    const artistUrl = getUrl(baseUrl, "artist", artistId);
     const fileId = UrlSafeBase64.encode(file);
+    const songUrl = getUrl(baseUrl, "song", fileId);
+    const imageUrl = getUrl(baseUrl, "image", fileId);
+    const url = getUrl(baseUrl, "file", fileId);
 
     if (!artistsCol[artistId]) {
       artistsCol[artistId] = {
         name: artistName,
-        albums: {},
-        files: {},
+        albums: [],
+        files: [],
+        images: [],
       };
     }
 
     if (rest.length === 1) {
       rest.forEach((name) => {
-        const obj = {
+        const fileWithInfo = {
           name,
           artistName,
-          artistId,
+          artistUrl,
+          url,
         };
+
         if (isImage(name)) {
-          imagesCol[fileId] = obj;
+          artistsCol[artistId].images.push({
+            name,
+            url: imageUrl,
+          });
+          imagesCol[fileId] = fileWithInfo;
         } else {
-          artistsCol[artistId].files[fileId] = name;
-          songsCol[fileId] = obj;
+          artistsCol[artistId].files.push({
+            name,
+            url: songUrl,
+          });
+          songsCol[fileId] = fileWithInfo;
         }
       });
     } else {
       const [albumName, ...albumRest] = rest;
       const albumId = UrlSafeBase64.encode(path.join(artistName, albumName));
+      const albumUrl = getUrl(baseUrl, "album", albumId);
       const fileName = albumRest[albumRest.length - 1];
 
       if (!albumsCol[albumId]) {
         albumsCol[albumId] = {
           name: albumName,
           artistName,
-          files: {},
+          artistUrl,
+          files: [],
+          images: [],
         };
       }
 
-      artistsCol[artistId].albums = {
-        ...artistsCol[artistId].albums,
-        [albumId]: albumName,
-      };
+      if (!albumSet.has(albumUrl)) {
+        albumSet.add(albumUrl);
+        // @ts-expect-error it's not undefined
+        artistsCol[artistId].albums.push({
+          name: albumName,
+          url: albumUrl,
+        });
+      }
 
-      albumsCol[albumId].files[fileId] = fileName;
-
-      const obj = {
+      const fileWithInfo = {
         name: fileName,
         artistName,
-        artistId,
+        artistUrl,
         albumName,
-        albumId,
+        albumUrl,
+        url,
       };
       if (isImage(fileName)) {
-        imagesCol[fileId] = obj;
+        albumsCol[albumId].images.push({
+          name: fileName,
+          url: imageUrl,
+        });
+        imagesCol[fileId] = fileWithInfo;
       } else {
-        songsCol[fileId] = obj;
+        albumsCol[albumId].files.push({
+          name: fileName,
+          url: songUrl,
+        });
+        songsCol[fileId] = fileWithInfo;
       }
     }
   }
 
   return { artistsCol, albumsCol, songsCol, imagesCol };
+};
+
+const getUrl = (baseUrl: string, path: string, id: string): string => {
+  return `${baseUrl}/${path}/${id}`;
 };

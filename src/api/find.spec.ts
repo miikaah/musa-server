@@ -39,8 +39,8 @@ describe("API", () => {
         limit: 50,
         results: [
           {
-            id: "YmFy",
             path: "bar",
+            url: "http://localhost:4200/file/YmFy",
           },
         ],
         total: 1,
