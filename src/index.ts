@@ -9,6 +9,8 @@ import {
 
 const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200 } = process.env;
 
+export const baseUrl = `http://localhost:${PORT}`;
+
 export let files: string[] = [];
 let artistCollection: ArtistCollection = {};
 let albumCollection: AlbumCollection = {};
@@ -57,7 +59,7 @@ const start = async () => {
     console.log(`Took: ${(Date.now() - totalStart) / 1000} seconds total`);
     console.log("----------------------\n");
 
-    console.log(`Serving http://localhost:${PORT}\n`);
+    console.log(`Serving ${baseUrl}\n`);
   });
 };
 
