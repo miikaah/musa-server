@@ -1,6 +1,6 @@
 import path, { sep } from "path";
 import { imageExts } from "./fs";
-import UrlSafeBase64 from "urlsafe-base64";
+import UrlSafeBase64 from "./urlsafe-base64";
 
 export type MediaCollection = {
   artistsCol: ArtistCollection;
@@ -57,8 +57,8 @@ export const createMediaCollection = (files: string[]): MediaCollection => {
 
   for (const file of files) {
     const [artistName, ...rest] = file.split(sep);
-    const artistId = encodeToUrlSafeBase64(artistName);
-    const fileId = encodeToUrlSafeBase64(file);
+    const artistId = UrlSafeBase64.encode(artistName);
+    const fileId = UrlSafeBase64.encode(file);
 
     if (!artistsCol[artistId]) {
       artistsCol[artistId] = {
@@ -84,7 +84,7 @@ export const createMediaCollection = (files: string[]): MediaCollection => {
       });
     } else {
       const [albumName, ...albumRest] = rest;
-      const albumId = encodeToUrlSafeBase64(path.join(artistName, albumName));
+      const albumId = UrlSafeBase64.encode(path.join(artistName, albumName));
       const fileName = albumRest[albumRest.length - 1];
 
       if (!albumsCol[albumId]) {
@@ -118,8 +118,4 @@ export const createMediaCollection = (files: string[]): MediaCollection => {
   }
 
   return { artistsCol, albumsCol, songsCol, imagesCol };
-};
-
-const encodeToUrlSafeBase64 = (s: string) => {
-  return UrlSafeBase64.encode(Buffer.from(s));
 };

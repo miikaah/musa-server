@@ -1,6 +1,6 @@
 import express, { Request } from "express";
 import fuzzysort from "fuzzysort";
-import UrlSafeBase64 from "urlsafe-base64";
+import UrlSafeBase64 from "./urlsafe-base64";
 import { traverseFileSystem } from "./fs";
 import {
   createMediaCollection,
@@ -30,11 +30,10 @@ app.get("/find/files/:name", (req: Request<{ name: string }>, res) => {
   if (foundFiles.total) {
     const results = foundFiles.map((f) => {
       const { target: path } = f;
-      const buf = Buffer.from(path);
 
       return {
         path,
-        base64: UrlSafeBase64.encode(buf),
+        id: UrlSafeBase64.encode(path),
       };
     });
 
@@ -48,7 +47,7 @@ app.get("/find/files/:name", (req: Request<{ name: string }>, res) => {
 
 app.get("/file/:name", (req: Request<{ name: string }>, res, next) => {
   const { name } = req.params;
-  const filename = UrlSafeBase64.decode(name).toString("utf-8");
+  const filename = UrlSafeBase64.decode(name);
   const options = {
     root: srcPath,
   };
