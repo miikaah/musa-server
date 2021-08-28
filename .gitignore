@@ -41,4 +41,4 @@ dist
 esbuild
 
 # env files
-.env*
+.env
