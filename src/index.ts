@@ -7,9 +7,9 @@ import {
   FileCollection,
 } from "./media-separator";
 
-const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200 } = process.env;
+const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
 
-export const baseUrl = `http://localhost:${PORT}`;
+export const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
 
 export let files: string[] = [];
 let artistCollection: ArtistCollection = {};
