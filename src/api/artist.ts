@@ -14,6 +14,6 @@ app.get("/artist/:id", (req: Request<{ id: string }>, res) => {
   res.status(200).json(artist);
 });
 
-app.get("/artist", (_req, res) => {
+app.get("/artists", (_req, res) => {
   res.status(200).json(artistList);
 });
