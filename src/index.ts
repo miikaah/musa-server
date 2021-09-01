@@ -5,7 +5,6 @@ import {
   ArtistCollection,
   AlbumCollection,
   FileCollection,
-  File,
 } from "./media-separator";
 
 const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
@@ -17,7 +16,7 @@ export let artistCollection: ArtistCollection = {};
 export let albumCollection: AlbumCollection = {};
 export let songCollection: FileCollection = {};
 export let imageCollection: FileCollection = {};
-export let artistList: File[];
+export let artistList: { name: string; url: string }[];
 
 const logOpStart = (title: string) => {
   console.log(title);

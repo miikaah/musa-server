@@ -1,4 +1,4 @@
-import path, { sep } from "path";
+import path, { sep, ParsedPath } from "path";
 import { imageExts } from "./fs";
 import UrlSafeBase64 from "./urlsafe-base64";
 
@@ -16,12 +16,17 @@ export type ArtistCollection = {
 export type File = {
   name: string;
   url: string;
+  fileUrl: string;
+};
+
+type AlbumFile = File & {
+  coverUrl: string;
 };
 
 type ArtistWithAlbums = {
   url: string;
   name: string;
-  albums?: File[];
+  albums: AlbumFile[];
   files: File[];
   images: File[];
 };
@@ -36,19 +41,19 @@ type AlbumWithFiles = {
   name: string;
   files: File[];
   images: File[];
+  coverUrl?: string;
 };
 
 export type FileCollection = {
   [x: string]: FileWithInfo;
 };
 
-type FileWithInfo = {
-  name: string;
+type FileWithInfo = File & {
   artistName: string;
   artistUrl: string;
   albumName?: string;
   albumUrl?: string;
-  url: string;
+  albumCoverUrl?: string;
 };
 
 const isImage = (filename: string) => {
@@ -82,30 +87,36 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
       };
     }
 
+    // First pass
     if (rest.length === 1) {
+      // This file is in the artist folder
       rest.forEach((name) => {
         const fileWithInfo = {
           name,
           artistName,
           artistUrl,
           url,
+          fileUrl: url,
         };
 
         if (isImage(name)) {
           artistsCol[artistId].images.push({
             name,
             url: imageUrl,
+            fileUrl: url,
           });
           imagesCol[fileId] = fileWithInfo;
         } else {
           artistsCol[artistId].files.push({
             name,
             url: songUrl,
+            fileUrl: url,
           });
           songsCol[fileId] = fileWithInfo;
         }
       });
     } else {
+      // This file is in an album folder
       const [albumName, ...albumRest] = rest;
       const albumId = UrlSafeBase64.encode(path.join(artistName, albumName));
       const albumUrl = getUrl(baseUrl, "album", albumId);
@@ -137,26 +148,75 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
         albumName,
         albumUrl,
         url,
+        fileUrl: url,
       };
+
       if (isImage(fileName)) {
         albumsCol[albumId].images.push({
           name: fileName,
           url: imageUrl,
+          fileUrl: url,
         });
         imagesCol[fileId] = fileWithInfo;
+
+        const parsedFile = path.parse(fileName);
+        if (isAlbumCoverImage(albumName, parsedFile)) {
+          albumsCol[albumId].coverUrl = url;
+
+          const albumIndex = artistsCol[artistId].albums.findIndex((a) => a.name === albumName);
+          if (albumIndex > -1) {
+            const album = artistsCol[artistId].albums[albumIndex];
+            album.coverUrl = url;
+          }
+        }
       } else {
         albumsCol[albumId].files.push({
           name: fileName,
           url: songUrl,
+          fileUrl: url,
         });
         songsCol[fileId] = fileWithInfo;
       }
     }
   }
 
+  // Second pass for enriching artist album lists with missing album covers
+  Object.keys(artistsCol).forEach((key) => {
+    artistsCol[key].albums.forEach((a) => {
+      if (a.coverUrl) {
+        return;
+      }
+
+      const id = a.url.split("/").pop() || "";
+      const images = albumsCol[id].images;
+
+      // Find an image with a default name
+      for (const img of images) {
+        if (isDefaultNameImage(img.name)) {
+          a.coverUrl = img.fileUrl;
+          break;
+        }
+      }
+
+      // Take the first image
+      if (!a.coverUrl && images.length) {
+        a.coverUrl = images[0].fileUrl;
+      }
+    });
+  });
+
   return { artistsCol, albumsCol, songsCol, imagesCol };
 };
 
 const getUrl = (baseUrl: string, path: string, id: string): string => {
   return `${baseUrl}/${path}/${id}`;
+};
+
+const isAlbumCoverImage = (albumName: string, img: ParsedPath): boolean => {
+  return albumName.toLowerCase().includes(img.name.toLowerCase());
+};
+
+const isDefaultNameImage = (pic: string) => {
+  const s = pic.toLowerCase();
+  return s.includes("front") || s.includes("cover") || s.includes("_large") || s.includes("folder");
 };
