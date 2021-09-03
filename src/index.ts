@@ -58,7 +58,7 @@ const start = async () => {
   console.log(`Found: ${Object.keys(imageCollection).length} images`);
   console.log("----------------------\n");
 
-  app.listen(PORT, () => {
+  app.listen(PORT, async () => {
     logOpStart("Startup Report");
     console.log(`Took: ${(Date.now() - totalStart) / 1000} seconds total`);
     console.log("----------------------\n");

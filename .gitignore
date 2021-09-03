@@ -42,3 +42,7 @@ esbuild
 
 # env files
 .env
+
+# test files
+Vasaraasialainen.mp3
+data.txt
