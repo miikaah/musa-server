@@ -14,6 +14,7 @@ export type ArtistCollection = {
 };
 
 export type File = {
+  id: string;
   name: string;
   url: string;
   fileUrl: string;
@@ -92,6 +93,7 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
       // This file is in the artist folder
       rest.forEach((name) => {
         const fileWithInfo = {
+          id: fileId,
           name,
           artistName,
           artistUrl,
@@ -101,6 +103,7 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
 
         if (isImage(name)) {
           artistsCol[artistId].images.push({
+            id: fileId,
             name,
             url: imageUrl,
             fileUrl: url,
@@ -108,6 +111,7 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
           imagesCol[fileId] = fileWithInfo;
         } else {
           artistsCol[artistId].files.push({
+            id: fileId,
             name,
             url: audioUrl,
             fileUrl: url,
@@ -142,6 +146,7 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
       }
 
       const fileWithInfo = {
+        id: fileId,
         name: fileName,
         artistName,
         artistUrl,
@@ -153,6 +158,7 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
 
       if (isImage(fileName)) {
         albumsCol[albumId].images.push({
+          id: fileId,
           name: fileName,
           url: imageUrl,
           fileUrl: url,
@@ -171,6 +177,7 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
         }
       } else {
         albumsCol[albumId].files.push({
+          id: fileId,
           name: fileName,
           url: audioUrl,
           fileUrl: url,
