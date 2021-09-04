@@ -1,11 +1,13 @@
 import * as musicMetadata from "music-metadata";
 
+type AudioMetadata = {
+  native: { "ID3v2.3": { id: string; value: string }[] };
+  common: { [x: string]: unknown };
+};
+
 export const readMetadata = async (
   filepath: string
-): Promise<
-  | musicMetadata.IAudioMetadata
-  | { native: { "ID3v2.3": { id: string; value: string }[] }; common: { [x: string]: unknown } }
-> => {
+): Promise<musicMetadata.IAudioMetadata | AudioMetadata> => {
   let metadata = { native: { "ID3v2.3": [] }, common: {} };
 
   try {

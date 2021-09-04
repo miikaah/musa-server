@@ -5,7 +5,7 @@ import UrlSafeBase64 from "./urlsafe-base64";
 export type MediaCollection = {
   artistsCol: ArtistCollection;
   albumsCol: AlbumCollection;
-  songsCol: FileCollection;
+  audioCol: FileCollection;
   imagesCol: FileCollection;
 };
 
@@ -63,7 +63,7 @@ const isImage = (filename: string) => {
 export const createMediaCollection = (files: string[], baseUrl: string): MediaCollection => {
   const artistsCol: ArtistCollection = {};
   const albumsCol: AlbumCollection = {};
-  const songsCol: FileCollection = {};
+  const audioCol: FileCollection = {};
   const imagesCol: FileCollection = {};
 
   const albumSet = new Set();
@@ -73,7 +73,7 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
     const artistId = UrlSafeBase64.encode(artistName);
     const artistUrl = getUrl(baseUrl, "artist", artistId);
     const fileId = UrlSafeBase64.encode(file);
-    const songUrl = getUrl(baseUrl, "song", fileId);
+    const audioUrl = getUrl(baseUrl, "audio", fileId);
     const imageUrl = getUrl(baseUrl, "image", fileId);
     const url = getUrl(baseUrl, "file", fileId);
 
@@ -109,10 +109,10 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
         } else {
           artistsCol[artistId].files.push({
             name,
-            url: songUrl,
+            url: audioUrl,
             fileUrl: url,
           });
-          songsCol[fileId] = fileWithInfo;
+          audioCol[fileId] = fileWithInfo;
         }
       });
     } else {
@@ -172,10 +172,10 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
       } else {
         albumsCol[albumId].files.push({
           name: fileName,
-          url: songUrl,
+          url: audioUrl,
           fileUrl: url,
         });
-        songsCol[fileId] = fileWithInfo;
+        audioCol[fileId] = fileWithInfo;
       }
     }
   }
@@ -205,7 +205,7 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
     });
   });
 
-  return { artistsCol, albumsCol, songsCol, imagesCol };
+  return { artistsCol, albumsCol, audioCol, imagesCol };
 };
 
 const getUrl = (baseUrl: string, path: string, id: string): string => {

@@ -7,7 +7,15 @@
     "dev": "nodemon --watch ./src --ext ts --exec npm run start",
     "start": "env-cmd ts-node --transpile-only src/index.ts",
     "tsc:w": "tsc --watch --noEmit",
-    "test:w": "jest --watch"
+    "test:w": "jest --watch",
+    "db:setup": "docker-compose up -d",
+    "db": "psql -h localhost -d musa -p 5432 -U pg",
+    "db:update": "npm run migrate:latest && npm run seed:run",
+    "migrate:make": "knex migrate:make",
+    "migrate:latest": "env-cmd knex migrate:latest",
+    "migrate:rollback": "env-cmd knex migrate:rollback",
+    "seed:make": "knex seed:make",
+    "seed:run": "env-cmd knex seed:run"
   },
   "author": "",
   "license": "ISC",
@@ -15,7 +23,9 @@
     "env-cmd": "^10.1.0",
     "express": "^4.17.1",
     "fuzzysort": "^1.1.4",
+    "knex": "^0.95.11",
     "music-metadata": "^7.11.4",
+    "pg": "^8.7.1",
     "ts-node": "^10.2.1",
     "urlsafe-base64": "^1.0.0"
   },

@@ -1,3 +1,4 @@
+import knexConstructor from "knex";
 import { app } from "./api";
 import { traverseFileSystem } from "./fs";
 import {
@@ -7,16 +8,35 @@ import {
   FileCollection,
 } from "./media-separator";
 
-const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
+const {
+  NODE_ENV,
+  MUSA_SRC_PATH = "",
+  PORT = 4200,
+  MUSA_BASE_URL,
+  DB_HOST,
+  DB_USER,
+  DB_PASSWORD,
+} = process.env;
 
 export const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
 
 export let files: string[] = [];
 export let artistCollection: ArtistCollection = {};
 export let albumCollection: AlbumCollection = {};
-export let songCollection: FileCollection = {};
+export let audioCollection: FileCollection = {};
 export let imageCollection: FileCollection = {};
 export let artistList: { name: string; url: string }[];
+
+export const knex = knexConstructor({
+  client: "pg",
+  connection: {
+    host: DB_HOST,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    charset: "utf8",
+    database: "musa",
+  },
+});
 
 const logOpStart = (title: string) => {
   console.log(title);
@@ -43,10 +63,10 @@ const start = async () => {
 
   logOpStart("Creating media collection");
   start = Date.now();
-  const { artistsCol, albumsCol, songsCol, imagesCol } = createMediaCollection(files, baseUrl);
+  const { artistsCol, albumsCol, audioCol, imagesCol } = createMediaCollection(files, baseUrl);
   artistCollection = artistsCol;
   albumCollection = albumsCol;
-  songCollection = songsCol;
+  audioCollection = audioCol;
   imageCollection = imagesCol;
 
   artistList = Object.values(artistCollection).map(({ name, url }) => ({ name, url }));
@@ -54,7 +74,7 @@ const start = async () => {
   console.log(`Took: ${(Date.now() - start) / 1000} seconds`);
   console.log(`Found: ${Object.keys(artistCollection).length} artists`);
   console.log(`Found: ${Object.keys(albumCollection).length} albums`);
-  console.log(`Found: ${Object.keys(songCollection).length} songs`);
+  console.log(`Found: ${Object.keys(audioCollection).length} songs`);
   console.log(`Found: ${Object.keys(imageCollection).length} images`);
   console.log("----------------------\n");
 
