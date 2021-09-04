@@ -47,7 +47,11 @@ type AlbumInsert = {
   album: { name: string; files: { id: string; name: string }[] };
 };
 
-export const insertAlbum = async ({ album, id }: AlbumInsert): Promise<Metadata> => {
+type AlbumMetadata = Partial<
+  Pick<Metadata, "year" | "album" | "artists" | "artist" | "dynamicRangeAlbum" | "genre">
+>;
+
+export const insertAlbum = async ({ album, id }: AlbumInsert): Promise<AlbumMetadata> => {
   const audioIds = album.files.map(({ id }) => id);
   const albumAudios = await knex.select().from("audio").whereIn("path_id", audioIds);
 
@@ -71,7 +75,7 @@ export const insertAlbum = async ({ album, id }: AlbumInsert): Promise<Metadata>
   return metadata;
 };
 
-const buildAlbumMetadata = (metadata: Metadata) => {
+const buildAlbumMetadata = (metadata: Metadata): AlbumMetadata => {
   const { year, album, artists, artist, dynamicRangeAlbum, genre } = metadata;
   return { year, album, artists, artist, genre, dynamicRangeAlbum };
 };
