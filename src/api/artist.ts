@@ -1,8 +1,9 @@
 import { app } from "../api";
 import { Request } from "express";
-import { artistCollection, artistList } from "../";
+import { artistCollection, artistList, knex } from "../";
+import { insertArtist } from "../db";
 
-app.get("/artist/:id", (req: Request<{ id: string }>, res) => {
+app.get("/artist/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
   const artist = artistCollection[id];
 
@@ -11,7 +12,17 @@ app.get("/artist/:id", (req: Request<{ id: string }>, res) => {
     return;
   }
 
-  res.status(200).json(artist);
+  const dbArtist = await knex.select().from("artist").where("path_id", id).first();
+
+  let metadata = dbArtist?.metadata;
+  if (!dbArtist) {
+    metadata = await insertArtist({ id, artist });
+  }
+
+  res.status(200).json({
+    ...artist,
+    metadata,
+  });
 });
 
 app.get("/artists", (_req, res) => {

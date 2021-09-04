@@ -20,8 +20,13 @@ export type File = {
   fileUrl?: string;
 };
 
-type AlbumFile = File & {
+export type AlbumFile = File & {
   coverUrl?: string;
+  // Used for artist metadata scanning
+  firstAlbumAudio: {
+    id: string;
+    name: string;
+  };
 };
 
 type ArtistWithAlbums = {
@@ -36,7 +41,7 @@ export type AlbumCollection = {
   [x: string]: AlbumWithFiles;
 };
 
-type AlbumWithFiles = {
+export type AlbumWithFiles = {
   artistName: string;
   artistUrl: string;
   name: string;
@@ -143,6 +148,10 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
           id: albumId,
           name: albumName,
           url: albumUrl,
+          firstAlbumAudio: {
+            id: fileId,
+            name: fileName,
+          },
         });
       }
 

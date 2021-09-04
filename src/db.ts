@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import { knex } from "./";
 import UrlSafeBase64 from "./urlsafe-base64";
 import { getMetadata, Metadata } from "./metadata";
+import { AlbumFile, AlbumWithFiles } from "./media-separator";
 
 const { MUSA_SRC_PATH = "" } = process.env;
 
@@ -21,7 +22,7 @@ export const upsertAudio = async ({ id, audio }: AudioUpsert): Promise<Metadata>
   if (!dbAudio) {
     metadata = await getMetadata(id);
 
-    console.log("Inserting", id);
+    console.log("Inserting audio", id);
     await knex("audio").insert({
       path_id: id,
       modified_at: modifiedAt.toISOString(),
@@ -31,7 +32,7 @@ export const upsertAudio = async ({ id, audio }: AudioUpsert): Promise<Metadata>
   } else if (modifiedAt.getTime() > new Date(dbAudio.modified_at).getTime()) {
     metadata = await getMetadata(id);
 
-    console.log("Updating", id, "because it was modified at", modifiedAt);
+    console.log("Updating audio", id, "because it was modified at", modifiedAt);
     await knex("audio").where("path_id", id).update({
       modified_at: modifiedAt.toISOString(),
       filename: audio.name,
@@ -44,23 +45,24 @@ export const upsertAudio = async ({ id, audio }: AudioUpsert): Promise<Metadata>
 
 type AlbumInsert = {
   id: string;
-  album: { name: string; files: { id: string; name: string }[] };
+  album?: AlbumWithFiles | AlbumFile;
+  audio?: { id: string; name: string };
 };
 
 type AlbumMetadata = Partial<
   Pick<Metadata, "year" | "album" | "artists" | "artist" | "dynamicRangeAlbum" | "genre">
 >;
 
-export const insertAlbum = async ({ album, id }: AlbumInsert): Promise<AlbumMetadata> => {
-  const audioIds = album.files.map(({ id }) => id);
-  const albumAudios = await knex.select().from("audio").whereIn("path_id", audioIds);
+export const insertAlbum = async ({ id, album, audio }: AlbumInsert): Promise<AlbumMetadata> => {
+  const audioId = audio?.id || (album as AlbumWithFiles).files[0]?.id;
+  const albumAudios = await knex.select().from("audio").where("path_id", audioId);
 
   let metadata = {};
   if (Array.isArray(albumAudios) && albumAudios.length > 0) {
     metadata = buildAlbumMetadata(albumAudios[0].metadata);
   } else {
-    const audio = album.files[0];
-    const audioMetadata = await upsertAudio({ id: audio.id, audio });
+    const albumAudio = audio || (album as AlbumWithFiles).files[0];
+    const audioMetadata = await upsertAudio({ id: albumAudio.id, audio: albumAudio });
     metadata = buildAlbumMetadata(audioMetadata);
   }
 
@@ -68,7 +70,7 @@ export const insertAlbum = async ({ album, id }: AlbumInsert): Promise<AlbumMeta
   await knex("album").insert({
     path_id: id,
     modified_at: new Date().toISOString(),
-    filename: album.name,
+    filename: (album as AlbumWithFiles).name,
     metadata,
   });
 
@@ -78,4 +80,51 @@ export const insertAlbum = async ({ album, id }: AlbumInsert): Promise<AlbumMeta
 const buildAlbumMetadata = (metadata: Metadata): AlbumMetadata => {
   const { year, album, artists, artist, dynamicRangeAlbum, genre } = metadata;
   return { year, album, artists, artist, genre, dynamicRangeAlbum };
+};
+
+type ArtistInsert = {
+  id: string;
+  artist: {
+    name: string;
+    albums: AlbumFile[];
+  };
+};
+
+type ArtistMetadata = {
+  name: string;
+};
+
+export const insertArtist = async ({
+  id,
+  artist,
+}: ArtistInsert): Promise<ArtistMetadata | undefined> => {
+  const albumId = artist.albums[0]?.id;
+
+  if (!albumId) {
+    return undefined;
+  }
+
+  const dbAlbum = await knex.select().from("album").where("path_id", albumId).first();
+
+  let metadata = dbAlbum?.metadata;
+  if (!metadata) {
+    metadata = await insertAlbum({
+      id: albumId,
+      album: artist.albums[0],
+      audio: artist.albums[0].firstAlbumAudio,
+    });
+  }
+  const artistMetadata = {
+    name: metadata.artist || metadata.artists[0] || "Missing artist name",
+  };
+
+  console.log("Inserting artist", id);
+  await knex("artist").insert({
+    path_id: id,
+    modified_at: new Date().toISOString(),
+    filename: artist.name,
+    metadata: artistMetadata,
+  });
+
+  return artistMetadata;
 };
