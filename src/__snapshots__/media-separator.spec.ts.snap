@@ -8,12 +8,14 @@ Object {
       "artistUrl": "baseurl/artist/YXJ0aXN0",
       "files": Array [
         Object {
+          "fileUrl": "baseurl/file/YXJ0aXN0L2FsYnVtL3NvbmcubXAz",
           "name": "song.mp3",
-          "url": "baseurl/song/YXJ0aXN0L2FsYnVtL3NvbmcubXAz",
+          "url": "baseurl/audio/YXJ0aXN0L2FsYnVtL3NvbmcubXAz",
         },
       ],
       "images": Array [
         Object {
+          "fileUrl": "baseurl/file/YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw",
           "name": "cover.JPG",
           "url": "baseurl/image/YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw",
         },
@@ -25,18 +27,21 @@ Object {
     "YXJ0aXN0": Object {
       "albums": Array [
         Object {
+          "coverUrl": "baseurl/file/YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw",
           "name": "album",
           "url": "baseurl/album/YXJ0aXN0L2FsYnVt",
         },
       ],
       "files": Array [
         Object {
+          "fileUrl": "baseurl/file/YXJ0aXN0L3NvbmcubXAz",
           "name": "song.mp3",
-          "url": "baseurl/song/YXJ0aXN0L3NvbmcubXAz",
+          "url": "baseurl/audio/YXJ0aXN0L3NvbmcubXAz",
         },
       ],
       "images": Array [
         Object {
+          "fileUrl": "baseurl/file/YXJ0aXN0L2ltYWdlLlBORw",
           "name": "image.PNG",
           "url": "baseurl/image/YXJ0aXN0L2ltYWdlLlBORw",
         },
@@ -45,36 +50,40 @@ Object {
       "url": "baseurl/artist/YXJ0aXN0",
     },
   },
-  "imagesCol": Object {
-    "YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw": Object {
-      "albumName": "album",
-      "albumUrl": "baseurl/album/YXJ0aXN0L2FsYnVt",
-      "artistName": "artist",
-      "artistUrl": "baseurl/artist/YXJ0aXN0",
-      "name": "cover.JPG",
-      "url": "baseurl/file/YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw",
-    },
-    "YXJ0aXN0L2ltYWdlLlBORw": Object {
-      "artistName": "artist",
-      "artistUrl": "baseurl/artist/YXJ0aXN0",
-      "name": "image.PNG",
-      "url": "baseurl/file/YXJ0aXN0L2ltYWdlLlBORw",
-    },
-  },
-  "songsCol": Object {
+  "audioCol": Object {
     "YXJ0aXN0L2FsYnVtL3NvbmcubXAz": Object {
       "albumName": "album",
       "albumUrl": "baseurl/album/YXJ0aXN0L2FsYnVt",
       "artistName": "artist",
       "artistUrl": "baseurl/artist/YXJ0aXN0",
+      "fileUrl": "baseurl/file/YXJ0aXN0L2FsYnVtL3NvbmcubXAz",
       "name": "song.mp3",
       "url": "baseurl/file/YXJ0aXN0L2FsYnVtL3NvbmcubXAz",
     },
     "YXJ0aXN0L3NvbmcubXAz": Object {
       "artistName": "artist",
       "artistUrl": "baseurl/artist/YXJ0aXN0",
+      "fileUrl": "baseurl/file/YXJ0aXN0L3NvbmcubXAz",
       "name": "song.mp3",
       "url": "baseurl/file/YXJ0aXN0L3NvbmcubXAz",
+    },
+  },
+  "imagesCol": Object {
+    "YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw": Object {
+      "albumName": "album",
+      "albumUrl": "baseurl/album/YXJ0aXN0L2FsYnVt",
+      "artistName": "artist",
+      "artistUrl": "baseurl/artist/YXJ0aXN0",
+      "fileUrl": "baseurl/file/YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw",
+      "name": "cover.JPG",
+      "url": "baseurl/file/YXJ0aXN0L2FsYnVtL2NvdmVyLkpQRw",
+    },
+    "YXJ0aXN0L2ltYWdlLlBORw": Object {
+      "artistName": "artist",
+      "artistUrl": "baseurl/artist/YXJ0aXN0",
+      "fileUrl": "baseurl/file/YXJ0aXN0L2ltYWdlLlBORw",
+      "name": "image.PNG",
+      "url": "baseurl/file/YXJ0aXN0L2ltYWdlLlBORw",
     },
   },
 }
