@@ -52,6 +52,7 @@ export type FileCollection = {
 type FileWithInfo = File & {
   artistName: string;
   artistUrl: string;
+  albumId?: string;
   albumName?: string;
   albumUrl?: string;
   albumCoverUrl?: string;
@@ -150,6 +151,7 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
         name: fileName,
         artistName,
         artistUrl,
+        albumId,
         albumName,
         albumUrl,
         url,
