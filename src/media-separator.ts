@@ -17,11 +17,11 @@ export type File = {
   id: string;
   name: string;
   url: string;
-  fileUrl: string;
+  fileUrl?: string;
 };
 
 type AlbumFile = File & {
-  coverUrl: string;
+  coverUrl?: string;
 };
 
 type ArtistWithAlbums = {
@@ -139,8 +139,8 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
 
       if (!albumSet.has(albumUrl)) {
         albumSet.add(albumUrl);
-        // @ts-expect-error it's not undefined
         artistsCol[artistId].albums.push({
+          id: albumId,
           name: albumName,
           url: albumUrl,
         });
@@ -155,7 +155,6 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
         albumName,
         albumUrl,
         url,
-        fileUrl: url,
       };
 
       if (isImage(fileName)) {
@@ -202,14 +201,14 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
       // Find an image with a default name
       for (const img of images) {
         if (isDefaultNameImage(img.name)) {
-          a.coverUrl = img.fileUrl;
+          a.coverUrl = img.url;
           break;
         }
       }
 
       // Take the first image
       if (!a.coverUrl && images.length) {
-        a.coverUrl = images[0].fileUrl;
+        a.coverUrl = images[0].url;
       }
     });
   });
