@@ -10,12 +10,9 @@
     "test:w": "jest --watch",
     "db:setup": "docker-compose up -d",
     "db": "psql -h localhost -d musa -p 5432 -U pg",
-    "db:update": "npm run migrate:latest && npm run seed:run",
     "migrate:make": "knex migrate:make",
     "migrate:latest": "env-cmd knex migrate:latest",
-    "migrate:rollback": "env-cmd knex migrate:rollback",
-    "seed:make": "knex seed:make",
-    "seed:run": "env-cmd knex seed:run"
+    "migrate:rollback": "env-cmd knex migrate:rollback"
   },
   "author": "",
   "license": "ISC",

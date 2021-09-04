@@ -21,6 +21,8 @@ app.get("/album/:id", async (req: Request<{ id: string }>, res) => {
 
   res.status(200).json({
     ...album,
+    files: album.files.map(({ name, url, fileUrl }) => ({ name, url, fileUrl })),
+    images: album.images.map(({ name, url, fileUrl }) => ({ name, url, fileUrl })),
     metadata,
   });
 });
