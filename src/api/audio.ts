@@ -22,7 +22,7 @@ app.get("/audio/:id", async (req: Request<{ id: string }>, res) => {
   const modifiedAt = new Date(stats.mtimeMs);
   const dbAudio = await knex.select().from("audio").where("path_id", id).first();
 
-  let metadata = dbAudio;
+  let metadata = dbAudio.metadata;
   if (!dbAudio) {
     metadata = await getMetadata(id);
 
