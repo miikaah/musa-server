@@ -50,16 +50,20 @@ type AlbumInsert = {
 };
 
 type AlbumMetadata = Partial<
-  Pick<Metadata, "year" | "album" | "artists" | "artist" | "dynamicRangeAlbum" | "genre">
+  Pick<
+    Metadata,
+    "year" | "album" | "artists" | "artist" | "albumArtist" | "dynamicRangeAlbum" | "genre"
+  >
 >;
 
 export const insertAlbum = async ({ id, album, audio }: AlbumInsert): Promise<AlbumMetadata> => {
   const audioId = audio?.id || (album as AlbumWithFiles).files[0]?.id;
-  const albumAudios = await knex.select().from("audio").where("path_id", audioId);
+  const dbAlbumAudio = await knex.select().from("audio").where("path_id", audioId).first();
 
+  console.log("dbAlbumAudio", dbAlbumAudio);
   let metadata = {};
-  if (Array.isArray(albumAudios) && albumAudios.length > 0) {
-    metadata = buildAlbumMetadata(albumAudios[0].metadata);
+  if (dbAlbumAudio) {
+    metadata = buildAlbumMetadata(dbAlbumAudio.metadata);
   } else {
     const albumAudio = audio || (album as AlbumWithFiles).files[0];
     const audioMetadata = await upsertAudio({ id: albumAudio.id, audio: albumAudio });
@@ -78,8 +82,8 @@ export const insertAlbum = async ({ id, album, audio }: AlbumInsert): Promise<Al
 };
 
 const buildAlbumMetadata = (metadata: Metadata): AlbumMetadata => {
-  const { year, album, artists, artist, dynamicRangeAlbum, genre } = metadata;
-  return { year, album, artists, artist, genre, dynamicRangeAlbum };
+  const { year, album, artists, artist, albumArtist, genre, dynamicRangeAlbum } = metadata;
+  return { year, album, artists, artist, albumArtist, genre, dynamicRangeAlbum };
 };
 
 type ArtistInsert = {
@@ -98,6 +102,8 @@ export const insertArtist = async ({
   id,
   artist,
 }: ArtistInsert): Promise<ArtistMetadata | undefined> => {
+  console.log("Artist", artist.name);
+  console.log("Album for metadata", artist.albums[0]);
   const albumId = artist.albums[0]?.id;
 
   if (!albumId) {
@@ -106,6 +112,7 @@ export const insertArtist = async ({
 
   const dbAlbum = await knex.select().from("album").where("path_id", albumId).first();
 
+  console.log("dbAlbum", dbAlbum);
   let metadata = dbAlbum?.metadata;
   if (!metadata) {
     metadata = await insertAlbum({
@@ -115,8 +122,9 @@ export const insertArtist = async ({
     });
   }
   const artistMetadata = {
-    name: metadata.artist || metadata.artists[0] || "Missing artist name",
+    name: metadata.artist || metadata.artists?.[0] || metadata.albumArtist || "Missing artist name",
   };
+  console.log("albumMetadata", metadata);
 
   console.log("Inserting artist", id);
   await knex("artist").insert({

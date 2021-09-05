@@ -18,6 +18,7 @@ type CommonMetadata = {
   encodersettings: string;
   composer: string;
   comment: string;
+  albumartist: string;
   genre: string[];
 };
 
@@ -54,6 +55,8 @@ export type Metadata = Partial<{
   artists: string[];
   artist: string;
   encoderSettings: string;
+  composer: string;
+  albumArtist: string;
   genre: string[];
   dynamicRange: string;
   dynamicRangeAlbum: string;
@@ -89,6 +92,7 @@ export const getMetadata = async (id: string): Promise<Metadata> => {
     encodersettings: encoderSettings,
     genre,
     composer,
+    albumartist: albumArtist,
     comment,
   } = common;
 
@@ -106,6 +110,7 @@ export const getMetadata = async (id: string): Promise<Metadata> => {
     encoderSettings,
     genre,
     composer,
+    albumArtist,
     comment,
     ...id3v2,
   };

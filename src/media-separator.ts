@@ -22,8 +22,8 @@ export type File = {
 
 export type AlbumFile = File & {
   coverUrl?: string;
-  // Used for artist metadata scanning
-  firstAlbumAudio: {
+  // Used for artist metadata creation
+  firstAlbumAudio?: {
     id: string;
     name: string;
   };
@@ -148,10 +148,6 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
           id: albumId,
           name: albumName,
           url: albumUrl,
-          firstAlbumAudio: {
-            id: fileId,
-            name: fileName,
-          },
         });
       }
 
@@ -198,26 +194,35 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
   }
 
   // Second pass for enriching artist album lists with missing album covers
+  // and first album audios needed for artist metadata creation
   Object.keys(artistsCol).forEach((key) => {
     artistsCol[key].albums.forEach((a) => {
+      const id = a.url.split("/").pop() || "";
+      const files = albumsCol[id].files;
+
+      // This code has to be here before early return
+      if (!a.firstAlbumAudio && typeof files[0] === "object") {
+        const { id, name } = files[0];
+        a.firstAlbumAudio = { id, name };
+      }
+
       if (a.coverUrl) {
         return;
       }
 
-      const id = a.url.split("/").pop() || "";
       const images = albumsCol[id].images;
 
       // Find an image with a default name
       for (const img of images) {
         if (isDefaultNameImage(img.name)) {
-          a.coverUrl = img.url;
+          a.coverUrl = img.fileUrl;
           break;
         }
       }
 
       // Take the first image
       if (!a.coverUrl && images.length) {
-        a.coverUrl = images[0].url;
+        a.coverUrl = images[0].fileUrl;
       }
     });
   });
