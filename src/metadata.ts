@@ -18,6 +18,8 @@ type CommonMetadata = {
   date: string;
   replaygain_track_gain: ReplayGain;
   replaygain_track_peak: ReplayGain;
+  replaygain_album_gain: ReplayGain;
+  replaygain_album_peak: ReplayGain;
   title: string;
   artists: string[];
   artist: string;
@@ -59,6 +61,8 @@ export type Metadata = Partial<{
   date: string;
   replayGainTrackGain: ReplayGain;
   replayGainTrackPeak: ReplayGain;
+  replayGainAlbumGain: ReplayGain;
+  replayGainAlbumPeak: ReplayGain;
   title: string;
   artists: string[];
   artist: string;
@@ -97,6 +101,8 @@ export const getMetadata = async (id: string): Promise<Metadata> => {
     date,
     replaygain_track_gain: replayGainTrackGain,
     replaygain_track_peak: replayGainTrackPeak,
+    replaygain_album_gain: replayGainAlbumGain,
+    replaygain_album_peak: replayGainAlbumPeak,
     title,
     artists,
     artist,
@@ -116,6 +122,8 @@ export const getMetadata = async (id: string): Promise<Metadata> => {
     date,
     replayGainTrackGain,
     replayGainTrackPeak,
+    replayGainAlbumGain,
+    replayGainAlbumPeak,
     title,
     artists,
     artist,
