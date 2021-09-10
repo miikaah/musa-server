@@ -1,10 +1,15 @@
 import { sep } from "path";
-import { getAudiosWithFields, insertAudio, upsertAudio } from "./db";
+import { getAudiosWithFields, insertAudio, upsertAudio, upsertAlbum } from "./db";
 import { audioExts } from "./fs";
 import UrlSafeBase64 from "./urlsafe-base64";
+import { AlbumCollection } from "./media-separator";
 
-process.on("message", async (m: { files: string[] } = { files: [] }) => {
-  const { files } = m;
+type Params = { files: string[]; albumCollection: AlbumCollection };
+
+const defaultPayload: Params = { files: [], albumCollection: {} };
+
+process.on("message", async (m: Params = defaultPayload) => {
+  const { files, albumCollection } = m;
 
   if (!files || !Array.isArray) {
     console.error("Did not get files JSON");
@@ -21,6 +26,7 @@ process.on("message", async (m: { files: string[] } = { files: [] }) => {
     id: UrlSafeBase64.encode(file),
     filename: file.split(sep).pop() || "",
   }));
+  const albumEntries = Object.entries(albumCollection);
 
   const filesToInsert = [];
   const filesToUpdate = [];
@@ -35,8 +41,9 @@ process.on("message", async (m: { files: string[] } = { files: [] }) => {
 
   console.log("Scanning file system audio files");
   console.log("----------------------");
-  console.log(`Files to insert: ${filesToInsert.length}`);
-  console.log(`Files to update: ${filesToUpdate.length}`);
+  console.log(`Audios to insert: ${filesToInsert.length}`);
+  console.log(`Audios to update: ${filesToUpdate.length}`);
+  console.log(`Albums to update: ${albumEntries.length}`);
   console.log("----------------------");
 
   const startInsert = Date.now();
@@ -90,14 +97,24 @@ process.on("message", async (m: { files: string[] } = { files: [] }) => {
   const timeForUpdateSec = (Date.now() - startUpdate) / 1000;
   const updatesPerSecond =
     timeForUpdateSec > 0 ? Math.floor(filesToUpdate.length / timeForUpdateSec) : 0;
+
+  const startAlbumUpdate = Date.now();
+  for (const [id, album] of albumEntries) {
+    await upsertAlbum({ id, album });
+  }
+  const timeForAlbumUpdateSec = (Date.now() - startAlbumUpdate) / 1000;
+  const albumUpdatesPerSecond =
+    timeForUpdateSec > 0 ? Math.floor(albumEntries.length / timeForAlbumUpdateSec) : 0;
   const totalTime = (Date.now() - start) / 1000;
 
   console.log("\nScanner Report");
   console.log("----------------------");
-  console.log(`Inserts took: ${timeForInsertSec} seconds`);
+  console.log(`Audio inserts took: ${timeForInsertSec} seconds`);
   console.log(`${insertsPerSecond} inserts per seconds\n`);
-  console.log(`Updates took: ${timeForUpdateSec} seconds`);
+  console.log(`Audio updates took: ${timeForUpdateSec} seconds`);
   console.log(`${updatesPerSecond} updates per seconds\n`);
+  console.log(`Album updates took: ${timeForAlbumUpdateSec} seconds`);
+  console.log(`${albumUpdatesPerSecond} updates per seconds\n`);
   console.log(`Total time: ${totalTime} seconds`);
   console.log("----------------------\n");
 });
