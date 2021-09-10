@@ -1,18 +1,46 @@
+import knexConstructor from "knex";
 import path from "path";
 import fs from "fs/promises";
-import { knex } from "./";
 import UrlSafeBase64 from "./urlsafe-base64";
 import { getMetadata, Metadata } from "./metadata";
 import { AlbumFile, AlbumWithFiles } from "./media-separator";
 
-const { MUSA_SRC_PATH = "" } = process.env;
+const { MUSA_SRC_PATH = "", DB_HOST, DB_USER, DB_PASSWORD } = process.env;
+
+export const knex = knexConstructor({
+  client: "pg",
+  connection: {
+    host: DB_HOST,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    charset: "utf8",
+    database: "musa",
+  },
+});
+
+type AudioInsert = {
+  id: string;
+  filename: string;
+};
 
 type AudioUpsert = {
   id: string;
   audio: { name: string };
+  quiet?: boolean;
 };
 
-export const upsertAudio = async ({ id, audio }: AudioUpsert): Promise<Metadata> => {
+export const insertAudio = async ({ id, filename }: AudioInsert) => {
+  const metadata = await getMetadata({ id, quiet: true });
+
+  await knex("audio").insert({
+    path_id: id,
+    modified_at: new Date().toISOString(),
+    filename,
+    metadata,
+  });
+};
+
+export const upsertAudio = async ({ id, audio, quiet = false }: AudioUpsert): Promise<Metadata> => {
   const filepath = path.join(MUSA_SRC_PATH, UrlSafeBase64.decode(id));
   const stats = await fs.stat(filepath);
   const modifiedAt = new Date(stats.mtimeMs);
@@ -20,7 +48,7 @@ export const upsertAudio = async ({ id, audio }: AudioUpsert): Promise<Metadata>
 
   let metadata = dbAudio?.metadata;
   if (!dbAudio) {
-    metadata = await getMetadata(id);
+    metadata = await getMetadata({ id, quiet });
 
     console.log("Inserting audio", id);
     await knex("audio").insert({
@@ -30,9 +58,9 @@ export const upsertAudio = async ({ id, audio }: AudioUpsert): Promise<Metadata>
       metadata,
     });
   } else if (modifiedAt.getTime() > new Date(dbAudio.modified_at).getTime()) {
-    metadata = await getMetadata(id);
+    metadata = await getMetadata({ id, quiet });
 
-    console.log("Updating audio", id, "because it was modified at", modifiedAt);
+    console.log("Updating audio", audio.name, "because it was modified at", modifiedAt);
     await knex("audio").where("path_id", id).update({
       modified_at: modifiedAt.toISOString(),
       filename: audio.name,
@@ -135,4 +163,12 @@ export const insertArtist = async ({
   });
 
   return artistMetadata;
+};
+
+export const getAudio = async (id: string) => {
+  return knex.select().from("audio").where("path_id", id).first();
+};
+
+export const getAudiosWithFields = async (fields: string[]) => {
+  return knex.select(fields).from("audio");
 };

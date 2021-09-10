@@ -1,7 +1,7 @@
 import { app } from "../api";
 import { Request } from "express";
-import { artistCollection, artistList, knex } from "../";
-import { insertArtist } from "../db";
+import { artistCollection, artistList } from "../";
+import { knex, insertArtist } from "../db";
 
 app.get("/artist/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;

@@ -80,7 +80,12 @@ export type Metadata = Partial<{
 type NumberOf = { no: string | null; of: string | null };
 type ReplayGain = { dB: number; ratio: number };
 
-export const getMetadata = async (id: string): Promise<Metadata> => {
+type GetMetadataParams = {
+  id: string;
+  quiet?: boolean;
+};
+
+export const getMetadata = async ({ id, quiet = false }: GetMetadataParams): Promise<Metadata> => {
   const audioPath = path.join(MUSA_SRC_PATH, UrlSafeBase64.decode(id));
   const { format, native, common } = await readMetadata(audioPath);
   const id3v2x = native["ID3v2.4"] || native["ID3v2.3"] || native["ID3v1"] || [];
@@ -89,9 +94,11 @@ export const getMetadata = async (id: string): Promise<Metadata> => {
     dynamicRangeAlbum: (id3v2x.find((tag) => tag.id === "TXXX:ALBUM DYNAMIC RANGE") || {}).value,
   };
 
-  console.log("format", format);
-  console.log("native", native);
-  console.log("common", common);
+  if (!quiet) {
+    console.log("format", format);
+    console.log("native", native);
+    console.log("common", common);
+  }
 
   const {
     track,

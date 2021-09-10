@@ -1,4 +1,3 @@
-import knexConstructor from "knex";
 import { app } from "./api";
 import { traverseFileSystem } from "./fs";
 import {
@@ -7,16 +6,9 @@ import {
   AlbumCollection,
   FileCollection,
 } from "./media-separator";
+import { startScanner } from "./scanner-child";
 
-const {
-  NODE_ENV,
-  MUSA_SRC_PATH = "",
-  PORT = 4200,
-  MUSA_BASE_URL,
-  DB_HOST,
-  DB_USER,
-  DB_PASSWORD,
-} = process.env;
+const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
 
 export const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
 
@@ -26,17 +18,6 @@ export let albumCollection: AlbumCollection = {};
 export let audioCollection: FileCollection = {};
 export let imageCollection: FileCollection = {};
 export let artistList: { name: string; url: string }[];
-
-export const knex = knexConstructor({
-  client: "pg",
-  connection: {
-    host: DB_HOST,
-    user: DB_USER,
-    password: DB_PASSWORD,
-    charset: "utf8",
-    database: "musa",
-  },
-});
 
 const logOpStart = (title: string) => {
   console.log(title);
@@ -82,8 +63,9 @@ const start = async () => {
     logOpStart("Startup Report");
     console.log(`Took: ${(Date.now() - totalStart) / 1000} seconds total`);
     console.log("----------------------\n");
-
     console.log(`Serving ${baseUrl}\n`);
+
+    startScanner();
   });
 };
 
