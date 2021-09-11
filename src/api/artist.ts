@@ -15,6 +15,8 @@ app.get("/artist/:id", async (req: Request<{ id: string }>, res) => {
   const albums = await Promise.all(
     artist.albums.map(async ({ name, url, coverUrl, firstAlbumAudio }) => {
       let year = null;
+      let albumName = null;
+
       if (firstAlbumAudio && firstAlbumAudio.id) {
         const audio = await knex
           .select("metadata")
@@ -22,8 +24,10 @@ app.get("/artist/:id", async (req: Request<{ id: string }>, res) => {
           .where("path_id", firstAlbumAudio.id)
           .first();
         year = audio?.metadata?.year;
+        albumName = audio?.metadata?.album;
       }
-      return { name, url, coverUrl, year };
+
+      return { name: albumName || name, url, coverUrl, year };
     })
   );
 
