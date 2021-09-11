@@ -36,6 +36,7 @@ type AudioMetadata = {
     ID3v1?: { id: string; value: string }[];
     "ID3v2.3"?: { id: string; value: string }[];
     "ID3v2.4"?: { id: string; value: string }[];
+    vorbis?: { id: string; value: string }[];
   };
   common: Partial<CommonMetadata>;
 };
@@ -89,10 +90,22 @@ export const getMetadata = async ({ id, quiet = false }: GetMetadataParams): Pro
   const audioPath = path.join(MUSA_SRC_PATH, UrlSafeBase64.decode(id));
   const { format, native, common } = await readMetadata(audioPath);
   const id3v2x = native["ID3v2.4"] || native["ID3v2.3"] || native["ID3v1"] || [];
-  const id3v2 = {
-    dynamicRange: (id3v2x.find((tag) => tag.id === "TXXX:DYNAMIC RANGE") || {}).value,
-    dynamicRangeAlbum: (id3v2x.find((tag) => tag.id === "TXXX:ALBUM DYNAMIC RANGE") || {}).value,
-  };
+  const { vorbis = [] } = native;
+
+  let dynamicRangeTags = {};
+  if (id3v2x.length) {
+    // mp4
+    dynamicRangeTags = {
+      dynamicRange: (id3v2x.find((tag) => tag.id === "TXXX:DYNAMIC RANGE") || {}).value,
+      dynamicRangeAlbum: (id3v2x.find((tag) => tag.id === "TXXX:ALBUM DYNAMIC RANGE") || {}).value,
+    };
+  } else if (vorbis.length) {
+    // flac
+    dynamicRangeTags = {
+      dynamicRange: (vorbis.find((tag) => tag.id === "DYNAMIC RANGE") || {}).value,
+      dynamicRangeAlbum: (vorbis.find((tag) => tag.id === "ALBUM DYNAMIC RANGE") || {}).value,
+    };
+  }
 
   if (!quiet) {
     console.log("format", format);
@@ -142,7 +155,7 @@ export const getMetadata = async ({ id, quiet = false }: GetMetadataParams): Pro
     bitrate,
     duration,
     sampleRate,
-    ...id3v2,
+    ...dynamicRangeTags,
   };
 
   return metadata;
