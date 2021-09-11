@@ -17,7 +17,11 @@ export let artistCollection: ArtistCollection = {};
 export let albumCollection: AlbumCollection = {};
 export let audioCollection: FileCollection = {};
 export let imageCollection: FileCollection = {};
-export let artistList: { name: string; url: string }[];
+
+type ArtistObject = {
+  [label: string]: { name: string; url: string }[];
+};
+export let artistObject: ArtistObject;
 
 const logOpStart = (title: string) => {
   console.log(title);
@@ -50,7 +54,17 @@ const start = async () => {
   audioCollection = audioCol;
   imageCollection = imagesCol;
 
-  artistList = Object.values(artistCollection).map(({ name, url }) => ({ name, url }));
+  artistObject = Object.values(artistCollection)
+    .map(({ name, url }) => ({ name, url }))
+    .reduce((acc: ArtistObject, artist) => {
+      const { name } = artist;
+      const label = name.charAt(0);
+
+      return {
+        ...acc,
+        [label]: [...(acc[label] || []), artist],
+      };
+    }, {});
 
   console.log(`Took: ${(Date.now() - start) / 1000} seconds`);
   console.log(`Found: ${Object.keys(artistCollection).length} artists`);

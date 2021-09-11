@@ -1,6 +1,6 @@
 import { app } from "../api";
 import { Request } from "express";
-import { artistCollection, artistList } from "../";
+import { artistCollection, artistObject } from "../";
 import { knex } from "../db";
 
 app.get("/artist/:id", async (req: Request<{ id: string }>, res) => {
@@ -36,5 +36,5 @@ app.get("/artist/:id", async (req: Request<{ id: string }>, res) => {
 });
 
 app.get("/artists", (_req, res) => {
-  res.status(200).json(artistList);
+  res.status(200).json(artistObject);
 });
