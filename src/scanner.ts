@@ -92,4 +92,6 @@ process.on("message", async (m: Params = defaultPayload) => {
   console.log(`${albumUpdatesPerSecond} updates per seconds\n`);
   console.log(`Total time: ${totalTime} seconds`);
   console.log("----------------------\n");
+
+  process.exit(0);
 });
