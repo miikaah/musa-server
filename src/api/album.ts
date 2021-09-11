@@ -39,12 +39,14 @@ app.get("/album/:id", async (req: Request<{ id: string }>, res) => {
       };
     })
     .sort((a, b) => a.trackNumber.localeCompare(b.trackNumber));
+  const { images, coverUrl } = album;
 
   res.status(200).json({
     id: path_id,
     filename,
+    coverUrl,
     metadata,
     files: mergedFiles,
-    coverUrl: album.coverUrl,
+    images,
   });
 });
