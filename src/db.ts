@@ -40,7 +40,7 @@ type AudioInsert = {
 
 type AudioUpsert = {
   id: string;
-  audio: { name: string };
+  filename: string;
   quiet?: boolean;
 };
 
@@ -55,7 +55,11 @@ export const insertAudio = async ({ id, filename }: AudioInsert) => {
   });
 };
 
-export const upsertAudio = async ({ id, audio, quiet = false }: AudioUpsert): Promise<Metadata> => {
+export const upsertAudio = async ({
+  id,
+  filename,
+  quiet = false,
+}: AudioUpsert): Promise<Metadata> => {
   const filepath = path.join(MUSA_SRC_PATH, UrlSafeBase64.decode(id));
   const stats = await fs.stat(filepath);
   const modifiedAt = new Date(stats.mtimeMs);
@@ -69,16 +73,16 @@ export const upsertAudio = async ({ id, audio, quiet = false }: AudioUpsert): Pr
     await knex("audio").insert({
       path_id: id,
       modified_at: modifiedAt.toISOString(),
-      filename: audio.name,
+      filename,
       metadata,
     });
   } else if (modifiedAt.getTime() > new Date(dbAudio.modified_at).getTime()) {
     metadata = await getMetadata({ id, quiet });
 
-    console.log("Updating audio", audio.name, "because it was modified at", modifiedAt);
+    console.log("Updating audio", filename, "because it was modified at", modifiedAt);
     await knex("audio").where("path_id", id).update({
       modified_at: modifiedAt.toISOString(),
-      filename: audio.name,
+      filename,
       metadata,
     });
   }

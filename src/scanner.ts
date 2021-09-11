@@ -78,8 +78,7 @@ process.on("message", async (m: Params = defaultPayload) => {
       if (filesToUpdate[i]) {
         const { id, filename } = filesToUpdate[i];
         await upsertAudio({
-          id,
-          audio: { name: filename },
+          ...filesToUpdate[i],
           quiet: true,
         });
       }
@@ -88,8 +87,7 @@ process.on("message", async (m: Params = defaultPayload) => {
         if (filesToUpdate[i + j]) {
           const { id, filename } = filesToUpdate[i + j];
           upsertAudio({
-            id,
-            audio: { name: filename },
+            ...filesToUpdate[i],
             quiet: true,
           });
         }

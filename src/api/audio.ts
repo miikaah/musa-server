@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { app } from "../api";
 import { audioCollection } from "../";
-import { upsertAudio } from "../db";
+import { knex } from "../db";
 
 app.get("/audio/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
@@ -12,7 +12,7 @@ app.get("/audio/:id", async (req: Request<{ id: string }>, res) => {
     return;
   }
 
-  const metadata = await upsertAudio({ id, audio });
+  const dbAudio = await knex.select("metadata").from("audio").where("path_id", id).first();
 
   const { name: filename, artistName, artistUrl, albumName, albumUrl, url } = audio;
 
@@ -23,6 +23,6 @@ app.get("/audio/:id", async (req: Request<{ id: string }>, res) => {
     albumName,
     albumUrl,
     url,
-    metadata,
+    metadata: dbAudio?.metadata,
   });
 });
