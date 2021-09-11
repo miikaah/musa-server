@@ -94,7 +94,7 @@ export const getMetadata = async ({ id, quiet = false }: GetMetadataParams): Pro
 
   let dynamicRangeTags = {};
   if (id3v2x.length) {
-    // mp4
+    // mp3
     dynamicRangeTags = {
       dynamicRange: (id3v2x.find((tag) => tag.id === "TXXX:DYNAMIC RANGE") || {}).value,
       dynamicRangeAlbum: (id3v2x.find((tag) => tag.id === "TXXX:ALBUM DYNAMIC RANGE") || {}).value,
