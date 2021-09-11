@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path, { sep } from "path";
 
-export const imageExts = [".jpg", ".png"];
+export const imageExts = [".jpg", ".jpeg", ".png"];
 export const audioExts = [".mp3", ".flac", ".ogg"];
 export const extensions = [...imageExts, ...audioExts];
 
