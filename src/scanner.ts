@@ -11,7 +11,7 @@ const defaultPayload: Params = { files: [], albumCollection: {} };
 process.on("message", async (m: Params = defaultPayload) => {
   const { files, albumCollection } = m;
 
-  if (!files || !Array.isArray) {
+  if (!files || !Array.isArray(files)) {
     console.error("Did not get files JSON");
     process.exit(1);
   }
@@ -66,6 +66,10 @@ process.on("message", async (m: Params = defaultPayload) => {
   const timeForInsertSec = (Date.now() - startInsert) / 1000;
   const insertsPerSecond =
     timeForInsertSec > 0 ? Math.floor(filesToInsert.length / timeForInsertSec) : 0;
+  console.log("\nScanner Report");
+  console.log("----------------------");
+  console.log(`Audio inserts took: ${timeForInsertSec} seconds`);
+  console.log(`${insertsPerSecond} inserts per seconds\n`);
 
   const startUpdate = Date.now();
   for (let i = 0; i < filesToUpdate.length; i += 4) {
@@ -97,6 +101,8 @@ process.on("message", async (m: Params = defaultPayload) => {
   const timeForUpdateSec = (Date.now() - startUpdate) / 1000;
   const updatesPerSecond =
     timeForUpdateSec > 0 ? Math.floor(filesToUpdate.length / timeForUpdateSec) : 0;
+  console.log(`Audio updates took: ${timeForUpdateSec} seconds`);
+  console.log(`${updatesPerSecond} updates per seconds\n`);
 
   const startAlbumUpdate = Date.now();
   for (const [id, album] of albumEntries) {
@@ -107,12 +113,6 @@ process.on("message", async (m: Params = defaultPayload) => {
     timeForUpdateSec > 0 ? Math.floor(albumEntries.length / timeForAlbumUpdateSec) : 0;
   const totalTime = (Date.now() - start) / 1000;
 
-  console.log("\nScanner Report");
-  console.log("----------------------");
-  console.log(`Audio inserts took: ${timeForInsertSec} seconds`);
-  console.log(`${insertsPerSecond} inserts per seconds\n`);
-  console.log(`Audio updates took: ${timeForUpdateSec} seconds`);
-  console.log(`${updatesPerSecond} updates per seconds\n`);
   console.log(`Album updates took: ${timeForAlbumUpdateSec} seconds`);
   console.log(`${albumUpdatesPerSecond} updates per seconds\n`);
   console.log(`Total time: ${totalTime} seconds`);
