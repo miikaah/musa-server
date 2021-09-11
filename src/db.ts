@@ -116,21 +116,11 @@ export const upsertAlbum = async ({ id, album }: AlbumUpsert): Promise<void> => 
 
   const metadata = buildAlbumMetadata(dbAlbumAudio.metadata);
   if (!dbAlbum) {
-    const { artistUrl, files, images, coverUrl } = album;
-
     await knex("album").insert({
       path_id: id,
       modified_at: new Date().toISOString(),
       filename: album.name,
-      metadata: {
-        album: {
-          artistUrl,
-          files,
-          images,
-          coverUrl,
-          metadata,
-        },
-      },
+      metadata,
     });
   } else if (new Date(dbAlbum.modified_at).getTime() < lastModificationTime) {
     console.log(
@@ -139,23 +129,11 @@ export const upsertAlbum = async ({ id, album }: AlbumUpsert): Promise<void> => 
       "because it was modified at",
       new Date(lastModificationTime).toISOString()
     );
-    const { artistUrl, files, images, coverUrl } = album;
-
-    await knex("album")
-      .where("path_id", id)
-      .update({
-        modified_at: new Date().toISOString(),
-        filename: album.name,
-        metadata: {
-          album: {
-            artistUrl,
-            files,
-            images,
-            coverUrl,
-            metadata,
-          },
-        },
-      });
+    await knex("album").where("path_id", id).update({
+      modified_at: new Date().toISOString(),
+      filename: album.name,
+      metadata,
+    });
   }
 };
 

@@ -47,18 +47,9 @@ process.on("message", async (m: Params = defaultPayload) => {
   console.log("----------------------");
 
   const startInsert = Date.now();
-  for (let i = 0; i < filesToInsert.length; i += 4) {
+  for (const file of filesToInsert) {
     try {
-      // Make sure there's no overflow
-      if (filesToInsert[i]) {
-        await insertAudio(filesToInsert[i]);
-      }
-      // Start concurrent inserts to speed it up
-      for (let j = 1; j < 4; j++) {
-        if (filesToInsert[i + j]) {
-          insertAudio(filesToInsert[i + j]);
-        }
-      }
+      await insertAudio(file);
     } catch (err) {
       console.error(err);
     }
@@ -72,26 +63,12 @@ process.on("message", async (m: Params = defaultPayload) => {
   console.log(`${insertsPerSecond} inserts per seconds\n`);
 
   const startUpdate = Date.now();
-  for (let i = 0; i < filesToUpdate.length; i += 4) {
+  for (const file of filesToUpdate) {
     try {
-      // Make sure there's no overflow
-      if (filesToUpdate[i]) {
-        const { id, filename } = filesToUpdate[i];
-        await upsertAudio({
-          ...filesToUpdate[i],
-          quiet: true,
-        });
-      }
-      // Start concurrent inserts to speed it up
-      for (let j = 1; j < 4; j++) {
-        if (filesToUpdate[i + j]) {
-          const { id, filename } = filesToUpdate[i + j];
-          upsertAudio({
-            ...filesToUpdate[i],
-            quiet: true,
-          });
-        }
-      }
+      await upsertAudio({
+        ...file,
+        quiet: true,
+      });
     } catch (err) {
       console.error(err);
     }

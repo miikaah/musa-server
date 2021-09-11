@@ -19,11 +19,11 @@ app.get("/album/:id", async (req: Request<{ id: string }>, res) => {
     return;
   }
 
-  const audioIds = dbAlbum.metadata.album.files.map(({ id }: { id: string }) => id);
+  const audioIds = album.files.map(({ id }: { id: string }) => id);
   const files = await knex.select().from("audio").whereIn("path_id", audioIds);
 
   const { path_id, filename, metadata } = dbAlbum;
-  const mergedFiles = metadata.album.files
+  const mergedFiles = album.files
     .map(({ id, name: filename, url, fileUrl }) => {
       const file = files.find((f) => f.path_id === id);
       const name = file?.metadata?.title || filename;
@@ -43,7 +43,7 @@ app.get("/album/:id", async (req: Request<{ id: string }>, res) => {
   res.status(200).json({
     id: path_id,
     filename,
-    ...metadata.album,
+    metadata,
     files: mergedFiles,
     coverUrl: album.coverUrl,
   });
