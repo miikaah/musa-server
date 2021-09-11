@@ -215,14 +215,20 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
       // Find an image with a default name
       for (const img of images) {
         if (isDefaultNameImage(img.name)) {
-          a.coverUrl = img.fileUrl;
+          const { fileUrl } = img;
+
+          a.coverUrl = fileUrl;
+          albumsCol[id].coverUrl = fileUrl;
           break;
         }
       }
 
       // Take the first image
       if (!a.coverUrl && images.length) {
-        a.coverUrl = images[0].fileUrl;
+        const { fileUrl } = images[0];
+
+        a.coverUrl = fileUrl;
+        albumsCol[id].coverUrl = fileUrl;
       }
     });
   });
