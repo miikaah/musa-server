@@ -21,6 +21,9 @@ app.get("/album/:id", async (req: Request<{ id: string }>, res) => {
 
   const audioIds = album.files.map(({ id }: { id: string }) => id);
   const files = await knex.select().from("audio").whereIn("path_id", audioIds);
+  const trackNumbers = files.map((file) => file?.metadata?.track?.no);
+  const maxTrackNo = Math.max(...trackNumbers);
+  const pad = `${maxTrackNo}`.length;
 
   const { path_id, filename, metadata } = dbAlbum;
   const mergedFiles = album.files
@@ -29,7 +32,7 @@ app.get("/album/:id", async (req: Request<{ id: string }>, res) => {
       const name = file?.metadata?.title || filename;
       const trackNo = `${file?.metadata?.track?.no || ""}`;
       const diskNo = `${file?.metadata?.disk?.no || ""}`;
-      const trackNumber = `${diskNo ? `${diskNo}.` : ""}${trackNo.padStart(2, "0")}`;
+      const trackNumber = `${diskNo ? `${diskNo}.` : ""}${trackNo.padStart(pad, "0")}`;
 
       return {
         trackNumber,
