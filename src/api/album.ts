@@ -40,6 +40,7 @@ app.get("/album/:id", async (req: Request<{ id: string }>, res) => {
         name,
         url,
         fileUrl,
+        metadata: file?.metadata || {},
       };
     })
     .sort((a, b) => a.track.localeCompare(b.track));
