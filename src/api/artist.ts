@@ -13,7 +13,7 @@ app.get("/artist/:id", async (req: Request<{ id: string }>, res) => {
   }
 
   const albums = await Promise.all(
-    artist.albums.map(async ({ name, url, coverUrl, firstAlbumAudio }) => {
+    artist.albums.map(async ({ id, name, url, coverUrl, firstAlbumAudio }) => {
       let year = null;
       let albumName = null;
 
@@ -27,7 +27,7 @@ app.get("/artist/:id", async (req: Request<{ id: string }>, res) => {
         albumName = audio?.metadata?.album;
       }
 
-      return { name: albumName || name, url, coverUrl, year };
+      return { id, name: albumName || name, url, coverUrl, year };
     })
   );
 

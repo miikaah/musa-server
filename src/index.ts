@@ -19,7 +19,7 @@ export let audioCollection: FileCollection = {};
 export let imageCollection: FileCollection = {};
 
 type ArtistObject = {
-  [label: string]: { name: string; url: string }[];
+  [label: string]: { id: string; name: string; url: string }[];
 };
 export let artistObject: ArtistObject;
 
@@ -54,8 +54,8 @@ const start = async () => {
   audioCollection = audioCol;
   imageCollection = imagesCol;
 
-  artistObject = Object.values(artistCollection)
-    .map(({ name, url }) => ({ name, url }))
+  artistObject = Object.entries(artistCollection)
+    .map(([id, { name, url }]) => ({ id, name, url }))
     .reduce((acc: ArtistObject, artist) => {
       const { name } = artist;
       const label = name.charAt(0);

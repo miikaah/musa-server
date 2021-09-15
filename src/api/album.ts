@@ -35,6 +35,7 @@ app.get("/album/:id", async (req: Request<{ id: string }>, res) => {
       const trackNumber = `${diskNo ? `${diskNo}.` : ""}${trackNo.padStart(pad, "0")}`;
 
       return {
+        id,
         trackNumber,
         name,
         url,
