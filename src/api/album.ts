@@ -32,16 +32,16 @@ app.get("/album/:id", async (req: Request<{ id: string }>, res) => {
       const name = file?.metadata?.title || filename;
       const trackNo = `${file?.metadata?.track?.no || ""}`;
       const diskNo = `${file?.metadata?.disk?.no || ""}`;
-      const trackNumber = `${diskNo ? `${diskNo}.` : ""}${trackNo.padStart(pad, "0")}`;
+      const track = `${diskNo ? `${diskNo}.` : ""}${trackNo.padStart(pad, "0")}`;
 
       return {
-        trackNumber,
+        track,
         name,
         url,
         fileUrl,
       };
     })
-    .sort((a, b) => a.trackNumber.localeCompare(b.trackNumber));
+    .sort((a, b) => a.track.localeCompare(b.track));
   const { images, coverUrl } = album;
 
   res.status(200).json({
