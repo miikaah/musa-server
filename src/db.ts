@@ -16,6 +16,7 @@ export const knex = knexConstructor({
     charset: "utf8",
     database: "musa",
   },
+  pool: { min: 4, max: 10 },
 });
 
 export type DbAlbum = {
@@ -44,7 +45,11 @@ type AudioUpsert = {
   quiet?: boolean;
 };
 
-export const insertAudio = async ({ id, filename }: AudioInsert) => {
+export const insertAudio = async (file: AudioInsert) => {
+  if (!file) {
+    return;
+  }
+  const { id, filename } = file;
   const metadata = await getMetadata({ id, quiet: true });
 
   await knex("audio").insert({
@@ -55,11 +60,13 @@ export const insertAudio = async ({ id, filename }: AudioInsert) => {
   });
 };
 
-export const upsertAudio = async ({
-  id,
-  filename,
-  quiet = false,
-}: AudioUpsert): Promise<Metadata> => {
+export const upsertAudio = async (file: AudioUpsert): Promise<void> => {
+  const { id, filename, quiet = false } = file;
+
+  if (!id || !filename) {
+    return;
+  }
+
   const filepath = path.join(MUSA_SRC_PATH, UrlSafeBase64.decode(id));
   const stats = await fs.stat(filepath);
   const modifiedAt = new Date(stats.mtimeMs);
@@ -86,8 +93,6 @@ export const upsertAudio = async ({
       metadata,
     });
   }
-
-  return metadata;
 };
 
 type AlbumMetadata = Partial<
@@ -102,7 +107,11 @@ type AlbumUpsert = {
   album: AlbumWithFiles;
 };
 
-export const upsertAlbum = async ({ id, album }: AlbumUpsert): Promise<void> => {
+export const upsertAlbum = async (file: AlbumUpsert): Promise<void> => {
+  if (!file) {
+    return;
+  }
+  const { id, album } = file;
   const albumAudioIds = album.files.map(({ id }) => id);
   const dbAlbum = await knex.select().from("album").where("path_id", id).first();
   const dbAlbumAudios = await knex.select().from("audio").whereIn("path_id", albumAudioIds);
