@@ -65,7 +65,7 @@ process.on("message", async (m: Params = defaultPayload) => {
       process.stdout.write(
         `Audio insert: (${i + 1} / ${filesToInsert.length}) ` +
           Math.trunc(((i + 1) / filesToInsert.length) * 100) +
-          "%"
+          "% "
       );
     } catch (err) {
       console.error(err);
