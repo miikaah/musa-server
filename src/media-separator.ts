@@ -63,10 +63,6 @@ type FileWithInfo = File & {
   albumCoverUrl?: string;
 };
 
-const isImage = (filename: string) => {
-  return imageExts.some((e) => filename.toLowerCase().endsWith(e));
-};
-
 export const createMediaCollection = (files: string[], baseUrl: string): MediaCollection => {
   const artistsCol: ArtistCollection = {};
   const albumsCol: AlbumCollection = {};
@@ -238,6 +234,10 @@ export const createMediaCollection = (files: string[], baseUrl: string): MediaCo
 
 const getUrl = (baseUrl: string, path: string, id: string): string => {
   return `${baseUrl}/${path}/${id}`;
+};
+
+const isImage = (filename: string) => {
+  return imageExts.some((e) => filename.toLowerCase().endsWith(e));
 };
 
 const isAlbumCoverImage = (albumName: string, img: ParsedPath): boolean => {
