@@ -1,7 +1,7 @@
 import { app } from "../api";
 import { Request } from "express";
 import fuzzysort from "fuzzysort";
-import UrlSafeBase64 from "../urlsafe-base64";
+import { UrlSafeBase64 } from "musa-core";
 import { files, baseUrl } from "../";
 
 app.get("/find/files/:name", (req: Request<{ name: string }>, res) => {

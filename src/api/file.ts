@@ -1,6 +1,6 @@
 import { app } from "../api";
 import { Request } from "express";
-import UrlSafeBase64 from "../urlsafe-base64";
+import { UrlSafeBase64 } from "musa-core";
 
 const { NODE_ENV, MUSA_SRC_PATH = "" } = process.env;
 

@@ -25,7 +25,8 @@
     "music-metadata": "^7.11.4",
     "pg": "^8.7.1",
     "ts-node": "^10.2.1",
-    "urlsafe-base64": "^1.0.0"
+    "urlsafe-base64": "^1.0.0",
+    "musa-core": "git@github.com:miikaah/musa-core.git#3525c44b12c926d3c10dd35f2f9434e6a3859034"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",

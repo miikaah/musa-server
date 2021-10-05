@@ -1,11 +1,11 @@
 import { app } from "./api";
-import { traverseFileSystem } from "./fs";
 import {
+  traverseFileSystem,
   createMediaCollection,
   ArtistCollection,
   AlbumCollection,
   FileCollection,
-} from "./media-separator";
+} from "musa-core";
 import { startScanner } from "./scanner-child";
 
 const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;

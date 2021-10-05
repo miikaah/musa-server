@@ -1,6 +1,6 @@
 import { app } from "../api";
 import supertest from "supertest";
-import UrlSafeBase64 from "../urlsafe-base64";
+import { UrlSafeBase64 } from "musa-core";
 import path from "path";
 
 const request = supertest(app);

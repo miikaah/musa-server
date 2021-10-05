@@ -1,8 +1,6 @@
 import { sep } from "path";
 import { getAudiosWithFields, insertAudio, upsertAudio, upsertAlbum } from "./db";
-import { audioExts } from "./fs";
-import UrlSafeBase64 from "./urlsafe-base64";
-import { AlbumCollection } from "./media-separator";
+import { audioExts, AlbumCollection, UrlSafeBase64 } from "musa-core";
 
 type Params = { files: string[]; albumCollection: AlbumCollection };
 
