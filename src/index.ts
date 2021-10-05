@@ -48,7 +48,7 @@ const start = async () => {
 
   logOpStart("Creating media collection");
   start = Date.now();
-  const { artistsCol, albumsCol, audioCol, imagesCol } = createMediaCollection(files, baseUrl);
+  const { artistsCol, albumsCol, audioCol, imagesCol } = createMediaCollection({ files, baseUrl });
   artistCollection = artistsCol;
   albumCollection = albumsCol;
   audioCollection = audioCol;
