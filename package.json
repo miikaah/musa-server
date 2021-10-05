@@ -26,7 +26,7 @@
     "pg": "^8.7.1",
     "ts-node": "^10.2.1",
     "urlsafe-base64": "^1.0.0",
-    "musa-core": "git@github.com:miikaah/musa-core.git#a1e91eab2315175ddabd13eedbc195badcffc70f"
+    "musa-core": "git@github.com:miikaah/musa-core.git#a1fb15c063f0cec8d432447f7d954a0face2164e"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
