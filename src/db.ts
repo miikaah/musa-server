@@ -49,7 +49,7 @@ export const insertAudio = async (file: AudioInsert) => {
     return;
   }
   const { id, filename } = file;
-  const metadata = await getMetadata({ id, quiet: true });
+  const metadata = await getMetadata(MUSA_SRC_PATH, { id, quiet: true });
 
   await knex("audio").insert({
     path_id: id,
@@ -73,7 +73,7 @@ export const upsertAudio = async (file: AudioUpsert): Promise<void> => {
 
   let metadata = dbAudio?.metadata;
   if (!dbAudio) {
-    metadata = await getMetadata({ id, quiet });
+    metadata = await getMetadata(MUSA_SRC_PATH, { id, quiet });
 
     console.log("Inserting audio", id);
     await knex("audio").insert({
@@ -83,7 +83,7 @@ export const upsertAudio = async (file: AudioUpsert): Promise<void> => {
       metadata,
     });
   } else if (modifiedAt.getTime() > new Date(dbAudio.modified_at).getTime()) {
-    metadata = await getMetadata({ id, quiet });
+    metadata = await getMetadata(MUSA_SRC_PATH, { id, quiet });
 
     console.log("Updating audio", filename, "because it was modified at", modifiedAt);
     await knex("audio").where("path_id", id).update({
