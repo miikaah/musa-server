@@ -5,6 +5,8 @@ import {
   ArtistCollection,
   AlbumCollection,
   FileCollection,
+  ArtistWithAlbums,
+  AlbumWithFiles,
 } from "musa-core";
 import { startScanner } from "./scanner-child";
 
@@ -17,6 +19,12 @@ export let artistCollection: ArtistCollection = {};
 export let albumCollection: AlbumCollection = {};
 export let audioCollection: FileCollection = {};
 export let imageCollection: FileCollection = {};
+
+type ArtistsForFind = (ArtistWithAlbums & { id: string })[];
+type AlbumsForFind = (AlbumWithFiles & { id: string })[];
+
+export let artistsForFind: ArtistsForFind;
+export let albumsForFind: AlbumsForFind;
 
 type ArtistObject = {
   [label: string]: { id: string; name: string; url: string }[];
@@ -65,6 +73,9 @@ const start = async () => {
         [label]: [...(acc[label] || []), artist],
       };
     }, {});
+
+  artistsForFind = Object.entries(artistCollection).map(([id, a]) => ({ ...a, id }));
+  albumsForFind = Object.entries(albumCollection).map(([id, a]) => ({ ...a, id }));
 
   console.log(`Took: ${(Date.now() - start) / 1000} seconds`);
   console.log(`Found: ${Object.keys(artistCollection).length} artists`);

@@ -1,7 +1,7 @@
 import knexConstructor from "knex";
 import path from "path";
 import fs from "fs/promises";
-import { getMetadata, Metadata, UrlSafeBase64 } from "musa-core";
+import { getMetadata, Metadata, UrlSafeBase64, AlbumCollection, ArtistWithAlbums } from "musa-core";
 import { AlbumWithFiles } from "musa-core";
 
 const { MUSA_SRC_PATH = "", DB_HOST, DB_USER, DB_PASSWORD } = process.env;
@@ -94,6 +94,12 @@ export const upsertAudio = async (file: AudioUpsert): Promise<void> => {
   }
 };
 
+type Album = { path_id: string; modified_at: string; metadata: Metadata };
+
+export const getAlbum = async (id: string): Promise<Album> => {
+  return knex.select().from("album").where("path_id", id).first();
+};
+
 type AlbumUpsert = {
   id: string;
   album: AlbumWithFiles;
@@ -143,12 +149,18 @@ const buildAlbumMetadata = (metadata: Metadata) => {
   return { year, album, artists, artist, albumArtist, genre, dynamicRangeAlbum };
 };
 
+type Audio = { path_id: string; modified_at: string; metadata: Metadata };
+
 export const getAudio = async (id: string) => {
   return knex.select().from("audio").where("path_id", id).first();
 };
 
 export const getAudiosWithFields = async (fields: string[]) => {
   return knex.select(fields).from("audio");
+};
+
+export const getAudiosByIds = async (ids: string[]): Promise<Audio[]> => {
+  return knex.select().from("audio").whereIn("path_id", ids);
 };
 
 export type Settings = {
@@ -213,4 +225,81 @@ export const updateTheme = async ({ id, filename, colors }: ThemeUpsert): Promis
 
 export const getAllThemes = async (): Promise<Theme[]> => {
   return knex().select().from("theme");
+};
+
+export type EnrichedAlbum = {
+  id: string;
+  name: string;
+  url: string;
+  coverUrl?: string;
+  year?: number | null;
+};
+
+export const enrichAlbums = async (
+  albumCollection: AlbumCollection,
+  artist: ArtistWithAlbums
+): Promise<EnrichedAlbum[]> => {
+  return Promise.all(
+    artist.albums.map(async ({ id, name, url, coverUrl, firstAlbumAudio }) => {
+      let year = null;
+      let albumName = null;
+
+      if (firstAlbumAudio && firstAlbumAudio.id) {
+        const audio = await getAudio(firstAlbumAudio.id);
+
+        year = audio?.metadata?.year;
+        albumName = audio?.metadata?.album;
+      }
+
+      const files = await enrichAlbumFiles(albumCollection[id]);
+
+      return {
+        id,
+        name: albumName || name,
+        url,
+        coverUrl,
+        year,
+        files,
+      };
+    })
+  );
+};
+
+export type EnrichedAlbumFile = {
+  id?: string;
+  name: string;
+  track: string;
+  fileUrl?: string;
+  metadata?: Metadata;
+};
+
+export const enrichAlbumFiles = async (album: AlbumWithFiles): Promise<EnrichedAlbumFile[]> => {
+  const audioIds = album.files.map(({ id }) => id);
+  const files = await getAudiosByIds(audioIds);
+  const trackNumbers = files.map((file) => Number(file?.metadata?.track?.no));
+  const maxTrackNo = Math.max(...trackNumbers);
+  const pad = `${maxTrackNo}`.length;
+  const padLen = pad < 2 ? 2 : pad;
+
+  const mergedFiles = await Promise.all(
+    album.files.map(async ({ id, name: filename, fileUrl }) => {
+      const file = files.find((f) => f.path_id === id);
+      const name = file?.metadata?.title || filename;
+      const trackNo = `${file?.metadata?.track?.no || ""}`;
+      const diskNo = `${file?.metadata?.disk?.no || ""}`;
+      const track = `${diskNo ? `${diskNo}.` : ""}${trackNo.padStart(padLen, "0")}`;
+
+      return {
+        id: file?.path_id,
+        name,
+        track,
+        fileUrl,
+        metadata: file?.metadata,
+      };
+    })
+  );
+
+  mergedFiles.sort((a, b) => a.track.localeCompare(b.track));
+
+  return mergedFiles;
 };
