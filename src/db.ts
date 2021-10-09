@@ -94,13 +94,6 @@ export const upsertAudio = async (file: AudioUpsert): Promise<void> => {
   }
 };
 
-type AlbumMetadata = Partial<
-  Pick<
-    Metadata,
-    "year" | "album" | "artists" | "artist" | "albumArtist" | "dynamicRangeAlbum" | "genre"
-  >
->;
-
 type AlbumUpsert = {
   id: string;
   album: AlbumWithFiles;
@@ -145,7 +138,7 @@ export const upsertAlbum = async (file: AlbumUpsert): Promise<void> => {
   }
 };
 
-const buildAlbumMetadata = (metadata: Metadata): AlbumMetadata => {
+const buildAlbumMetadata = (metadata: Metadata) => {
   const { year, album, artists, artist, albumArtist, genre, dynamicRangeAlbum } = metadata;
   return { year, album, artists, artist, albumArtist, genre, dynamicRangeAlbum };
 };
@@ -156,4 +149,30 @@ export const getAudio = async (id: string) => {
 
 export const getAudiosWithFields = async (fields: string[]) => {
   return knex.select(fields).from("audio");
+};
+
+export type Settings = {
+  id: number;
+  user_id: string;
+  modified_at: string;
+  json: unknown;
+};
+
+export const getSettings = async (): Promise<Settings | undefined> => {
+  return knex.select<Settings>().from("settings").where("user_id", "default").first();
+};
+
+export const insertSettings = async (json: unknown): Promise<unknown> => {
+  return knex("settings").insert({
+    user_id: "default",
+    modified_at: new Date().toISOString(),
+    json,
+  });
+};
+
+export const updateSettings = async (json: unknown): Promise<unknown> => {
+  return knex("settings").where("user_id", "default").update({
+    modified_at: new Date().toISOString(),
+    json,
+  });
 };

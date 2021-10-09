@@ -14,3 +14,4 @@ export * from "./api/artist";
 export * from "./api/album";
 export * from "./api/audio";
 export * from "./api/image";
+export * from "./api/settings";
