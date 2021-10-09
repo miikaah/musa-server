@@ -24,22 +24,15 @@ app.get("/audio/:id", async (req: Request<{ id: string }>, res) => {
     albumName = dbAlbum?.metadata?.album;
   }
 
-  const {
-    name: filename,
-    artistName,
-    artistUrl,
-    albumName: albumFolderName,
-    albumUrl,
-    url,
-  } = audio;
+  const { name, artistName, artistUrl, albumName: albumFolderName, albumUrl, url } = audio;
 
   res.status(200).json({
-    filename,
+    name,
     artistName,
     artistUrl,
     albumName: albumName || albumFolderName,
     albumUrl,
-    url,
+    fileUrl: url,
     coverUrl,
     metadata: dbAudio?.metadata,
   });
