@@ -14,13 +14,13 @@ app.get("/settings", async (_req, res) => {
 });
 
 app.put("/settings", async (req: Request<unknown, unknown, { settings: unknown }>, res) => {
-  const json = req.body.settings;
+  const { settings: json } = req.body;
   const settings = await getSettings();
 
   if (!settings) {
     await insertSettings(json);
 
-    res.status(201).json({ message: "Created" });
+    res.status(201).json(json);
     return;
   }
 

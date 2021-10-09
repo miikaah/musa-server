@@ -176,3 +176,37 @@ export const updateSettings = async (json: unknown): Promise<unknown> => {
     json,
   });
 };
+
+export type Theme = {
+  path_id: string;
+  filename: string;
+  modified_at: string;
+  colors: unknown;
+};
+
+export const getTheme = async (id: string): Promise<Theme | undefined> => {
+  return knex.select<Theme>().from("theme").where("path_id", id).first();
+};
+
+export type ThemeUpsert = {
+  id: string;
+  colors: unknown;
+  filename: string;
+};
+
+export const insertTheme = async ({ id, filename, colors }: ThemeUpsert): Promise<unknown> => {
+  return knex("theme").insert({
+    path_id: id,
+    filename,
+    modified_at: new Date().toISOString(),
+    colors,
+  });
+};
+
+export const updateTheme = async ({ id, filename, colors }: ThemeUpsert): Promise<unknown> => {
+  return knex("theme").where("path_id", id).update({
+    filename,
+    modified_at: new Date().toISOString(),
+    colors,
+  });
+};
