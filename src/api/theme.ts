@@ -1,7 +1,18 @@
 import { Request } from "express";
 import { UrlSafeBase64 } from "musa-core";
 import { app } from "../api";
-import { getTheme, insertTheme, updateTheme } from "../db";
+import { getTheme, insertTheme, updateTheme, getAllThemes } from "../db";
+
+app.get("/themes", async (_req, res) => {
+  const themes = await getAllThemes();
+
+  res.status(200).json({
+    themes: themes.map(({ colors, filename }) => ({
+      id: filename,
+      colors,
+    })),
+  });
+});
 
 app.get("/theme/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;

@@ -210,3 +210,7 @@ export const updateTheme = async ({ id, filename, colors }: ThemeUpsert): Promis
     colors,
   });
 };
+
+export const getAllThemes = async (): Promise<Theme[]> => {
+  return knex().select().from("theme");
+};
