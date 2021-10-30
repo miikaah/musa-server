@@ -5,12 +5,12 @@ import { app } from "../api";
 app.get("/themes", async (_req, res) => {
   const themes = await Api.getAllThemes();
 
-  res.status(200).json({
-    themes: themes.map(({ path_id, colors }) => ({
+  res.status(200).json(
+    themes.map(({ path_id, colors }) => ({
       id: path_id,
       colors,
-    })),
-  });
+    }))
+  );
 });
 
 app.get("/theme/:id", async (req: Request<{ id: string }>, res) => {
