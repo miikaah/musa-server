@@ -6,8 +6,6 @@ export const app = express();
 app.use(express.json());
 app.use(cors({ origin: "*" }));
 
-// Routes
-export * from "./api/hello";
 export * from "./api/find";
 export * from "./api/file";
 export * from "./api/artist";

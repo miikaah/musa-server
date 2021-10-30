@@ -1,44 +1,13 @@
-import { app } from "../api";
 import { Request } from "express";
-import { artistCollection, artistObject } from "../";
-import { knex } from "../db";
+import { Api } from "musa-core";
+import { app } from "../api";
 
 app.get("/artist/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
-  const artist = artistCollection[id];
 
-  if (!artist) {
-    res.status(404).json({ message: "Not Found" });
-    return;
-  }
-
-  const albums = await Promise.all(
-    artist.albums.map(async ({ id, name, url, coverUrl, firstAlbumAudio }) => {
-      let year = null;
-      let albumName = null;
-
-      if (firstAlbumAudio && firstAlbumAudio.id) {
-        const audio = await knex
-          .select("metadata")
-          .from("audio")
-          .where("path_id", firstAlbumAudio.id)
-          .first();
-        year = audio?.metadata?.year;
-        albumName = audio?.metadata?.album;
-      }
-
-      return { id, name: albumName || name, url, coverUrl, year };
-    })
-  );
-
-  res.status(200).json({
-    ...artist,
-    albums: albums.sort((a, b) => a.year - b.year),
-    files: artist.files.map(({ name, url, fileUrl }) => ({ name, url, fileUrl })),
-    images: artist.images.map(({ name, url, fileUrl }) => ({ name, url, fileUrl })),
-  });
+  res.status(200).json(await Api.getArtistById(id));
 });
 
-app.get("/artists", (_req, res) => {
-  res.status(200).json(artistObject);
+app.get("/artists", async (_req, res) => {
+  res.status(200).json(await Api.getArtists());
 });
