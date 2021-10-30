@@ -14,3 +14,4 @@ export * from "./api/audio";
 export * from "./api/image";
 export * from "./api/settings";
 export * from "./api/theme";
+export * from "./api/static";
