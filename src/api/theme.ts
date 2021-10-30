@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Api } from "musa-core";
+import { Api, UrlSafeBase64 } from "musa-core";
 import { app } from "../api";
 
 app.get("/themes", async (_req, res) => {
@@ -15,7 +15,8 @@ app.get("/themes", async (_req, res) => {
 
 app.get("/theme/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
-  const theme = await Api.getTheme(id);
+  const themeId = UrlSafeBase64.decode(id);
+  const theme = await Api.getTheme(themeId);
 
   if (!theme) {
     res.status(404).json({ message: "Not Found" });
@@ -30,9 +31,10 @@ app.get("/theme/:id", async (req: Request<{ id: string }>, res) => {
 
 app.put("/theme/:id", async (req: Request<{ id: string }, unknown, { colors: unknown }>, res) => {
   const { id } = req.params;
+  const themeId = UrlSafeBase64.decode(id);
   const { colors } = req.body;
 
-  const newTheme = await Api.insertTheme(id, colors);
+  const newTheme = await Api.insertTheme(themeId, colors);
   const { path_id } = newTheme;
 
   res.status(200).json({ id: path_id, colors });
