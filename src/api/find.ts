@@ -7,3 +7,7 @@ app.get("/find/:query", async (req: Request<{ query: string }>, res) => {
 
   res.status(200).json(await Api.find({ query }));
 });
+
+app.get("/find-random", async (_req, res) => {
+  res.status(200).json(await Api.findRandom());
+});
