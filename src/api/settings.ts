@@ -2,7 +2,7 @@ import { Request } from "express";
 import { app } from "../api";
 import { getState, setState, State } from "../fs.state";
 
-app.get("/settings", async (_req, res) => {
+app.get("/state", async (_req, res) => {
   const settings = await getState();
 
   if (!settings) {
@@ -13,7 +13,7 @@ app.get("/settings", async (_req, res) => {
   res.status(200).json(settings);
 });
 
-app.put("/settings", async (req: Request<unknown, unknown, { settings: State }>, res) => {
+app.put("/state", async (req: Request<unknown, unknown, { settings: State }>, res) => {
   const { settings } = req.body;
 
   await setState(settings);
