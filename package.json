@@ -15,7 +15,7 @@
     "cors": "^2.8.5",
     "env-cmd": "^10.1.0",
     "express": "^4.17.1",
-    "musa-core": "git@github.com:miikaah/musa-core.git#93d6eb5c634efab3ce36564a4769ce342b3414e8",
+    "musa-core": "git@github.com:miikaah/musa-core.git#151e2b5c39a2b5ea6741db6505a6195c1b7ad91c",
     "ts-node": "^10.2.1"
   },
   "devDependencies": {
