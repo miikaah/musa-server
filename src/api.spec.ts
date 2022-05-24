@@ -1,14 +1,12 @@
-import { app } from "./api";
+import { app } from ".";
 import supertest from "supertest";
 
 const request = supertest(app);
 
 describe("API", () => {
-  const route = "/not-exists";
+  const notExistsRoute = "/not-exists";
 
-  describe(`GET ${route}`, () => {
-    it("should get 404 from non-existant route", async () => {
-      await request.get(route).expect(404);
-    });
+  it(`should get 404 from ${notExistsRoute} route`, async () => {
+    await request.get(notExistsRoute).expect(404);
   });
 });

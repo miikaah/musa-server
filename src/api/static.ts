@@ -1,9 +1,11 @@
 import express from "express";
 import { app } from "../api";
 
-const { FRONTEND_BUILD_DIR = "" } = process.env;
+const { FRONTEND_BUILD_DIR = "", NODE_ENV = "" } = process.env;
 
-app.use("/", express.static(FRONTEND_BUILD_DIR));
+if (NODE_ENV !== "test") {
+  app.use("/", express.static(FRONTEND_BUILD_DIR));
 
-app.use("/search", express.static(FRONTEND_BUILD_DIR));
-app.use("/settings", express.static(FRONTEND_BUILD_DIR));
+  app.use("/search", express.static(FRONTEND_BUILD_DIR));
+  app.use("/settings", express.static(FRONTEND_BUILD_DIR));
+}

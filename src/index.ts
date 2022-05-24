@@ -1,6 +1,18 @@
 import { Db, Scanner, FileCollection } from "musa-core";
 import { app } from "./api";
 
+export { app } from "./api";
+
+export * from "./api/find";
+export * from "./api/file";
+export * from "./api/artist";
+export * from "./api/album";
+export * from "./api/audio";
+export * from "./api/image";
+export * from "./api/settings";
+export * from "./api/theme";
+export * from "./api/static";
+
 const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
 
 const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
