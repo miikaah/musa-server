@@ -1,6 +1,7 @@
 import { Request } from "express";
 import { Api, DbTheme } from "musa-core";
 import { app } from "../api";
+import type { Theme } from "./theme.types";
 
 app.get("/themes", async (_req, res) => {
   const themes = await Api.getAllThemes();
@@ -37,6 +38,6 @@ app.delete("/theme/:id", async (req: Request<{ id: string }>, res) => {
   res.status(204).send();
 });
 
-function toApiTheme({ path_id, filename, colors }: DbTheme) {
+function toApiTheme({ path_id, filename, colors }: DbTheme): Theme {
   return { id: path_id, filename, colors };
 }

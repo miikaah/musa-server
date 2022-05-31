@@ -8,9 +8,10 @@ const stateFile = `${isDev ? ".dev" : ""}.musa-server.state.v1.json`;
 const homedir = os.homedir();
 
 export type State = {
-  isInit: boolean;
+  isInit: boolean | null;
   currentTheme: {
     id: string;
+    filename?: string;
     colors: {
       bg: number[];
       primary: number[];
@@ -25,13 +26,14 @@ export type State = {
   replaygainType: string;
   volume: number;
   musicLibraryPath: string;
+  key?: string;
 };
 
 export const setState = async (state: Partial<State>): Promise<void> => {
   return fs.writeFile(path.join(homedir, stateFile), JSON.stringify(state, null, 2));
 };
 
-export const getState = async (): Promise<Partial<State>> => {
+export const getState = async (): Promise<Partial<State> | undefined> => {
   const file = await fs
     .readFile(path.join(homedir, stateFile), { encoding: "utf-8" })
     .catch((err) => {

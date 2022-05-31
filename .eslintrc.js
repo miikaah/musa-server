@@ -18,4 +18,14 @@ module.exports = {
   rules: {
     "prettier/prettier": 1,
   },
+  overrides: [
+    {
+      files: ["src/**/*.spec.ts"],
+      rules: {
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+      },
+    },
+  ],
 };
