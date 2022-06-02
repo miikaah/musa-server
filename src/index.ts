@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
 import { Db, Scanner, FileCollection } from "musa-core";
 import { app } from "./api";
+import { errorHandler } from "./error-handler";
 
 export { app } from "./api";
 
@@ -21,18 +21,7 @@ const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
 export let imageCollection: FileCollection = {};
 
 const start = async () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-    if (NODE_ENV !== "test") {
-      console.error(err);
-    }
-
-    if (NODE_ENV === "production" || NODE_ENV === "test") {
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
-
-    res.status(500).json(err);
-  });
+  app.use(errorHandler);
 
   if (NODE_ENV === "test") {
     return;
