@@ -1,20 +1,4 @@
-import type { DbTheme } from "musa-core";
-import type { Theme } from "../src/api/theme.types";
-
-export const themeDbFixture: DbTheme = {
-  path_id: "QXQgVGhlIEdhdGVzXFNsYXVnaHRlcm91cyBTb3Vsc1xTbGF1Z2h0ZXJvdXMgU291bHMuanBn",
-  filename: "At The Gates\\Slaughterous Souls\\Slaughterous Souls.jpg",
-  colors: {
-    bg: [33, 44, 30],
-    primary: [200, 198, 204],
-    secondary: [126, 125, 124],
-    typography: "#fbfbfb",
-    typographyGhost: "#d2d2d2",
-    typographyPrimary: "#000",
-    typographySecondary: "#fbfbfb",
-    slider: [200, 198, 204],
-  },
-};
+import { Theme } from "musa-core";
 
 export const themeFixture: Theme = {
   id: "QXQgVGhlIEdhdGVzXFNsYXVnaHRlcm91cyBTb3Vsc1xTbGF1Z2h0ZXJvdXMgU291bHMuanBn",

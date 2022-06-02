@@ -1,12 +1,9 @@
 import { Request } from "express";
-import { Api, DbTheme } from "musa-core";
+import { Api } from "musa-core";
 import { app } from "../api";
-import type { Theme } from "./theme.types";
 
 app.get("/themes", async (_req, res) => {
-  const themes = await Api.getAllThemes();
-
-  res.status(200).json(themes.map(toApiTheme));
+  res.status(200).json(await Api.getAllThemes());
 });
 
 app.get("/theme/:id", async (req: Request<{ id: string }>, res) => {
@@ -18,16 +15,14 @@ app.get("/theme/:id", async (req: Request<{ id: string }>, res) => {
     return;
   }
 
-  res.status(200).json(toApiTheme(theme));
+  res.status(200).json(theme);
 });
 
 app.put("/theme/:id", async (req: Request<{ id: string }, unknown, { colors: unknown }>, res) => {
   const { id } = req.params;
   const { colors } = req.body;
 
-  const newTheme = await Api.insertTheme(id, colors);
-
-  res.status(201).json(toApiTheme(newTheme));
+  res.status(201).json(await Api.insertTheme(id, colors));
 });
 
 app.delete("/theme/:id", async (req: Request<{ id: string }>, res) => {
@@ -37,7 +32,3 @@ app.delete("/theme/:id", async (req: Request<{ id: string }>, res) => {
 
   res.status(204).send();
 });
-
-function toApiTheme({ path_id, filename, colors }: DbTheme): Theme {
-  return { id: path_id, filename, colors };
-}

@@ -1,14 +1,14 @@
 import supertest from "supertest";
 import { Api } from "musa-core";
 import { app } from "../";
-import { themeDbFixture, themeFixture, themePayloadFixture } from "../../test-utils/theme.fixture";
+import { themeFixture, themePayloadFixture } from "../../test-utils/theme.fixture";
 
 jest.mock("musa-core");
 
-(Api.getTheme as jest.MockedFunction<typeof Api.getTheme>).mockResolvedValue(themeDbFixture);
-(Api.insertTheme as jest.MockedFunction<typeof Api.insertTheme>).mockResolvedValue(themeDbFixture);
+(Api.getTheme as jest.MockedFunction<typeof Api.getTheme>).mockResolvedValue(themeFixture);
+(Api.insertTheme as jest.MockedFunction<typeof Api.insertTheme>).mockResolvedValue(themeFixture);
 (Api.getAllThemes as jest.MockedFunction<typeof Api.getAllThemes>).mockResolvedValue([
-  themeDbFixture,
+  themeFixture,
 ]);
 
 const request = supertest(app);
