@@ -1,7 +1,8 @@
-import { app } from "../";
 import supertest from "supertest";
 import { UrlSafeBase64 } from "musa-core";
 import path from "path";
+
+import { app } from "../";
 
 const request = supertest(app);
 

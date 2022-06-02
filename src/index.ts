@@ -1,9 +1,9 @@
 import { Db, Scanner, FileCollection } from "musa-core";
+
 import { app } from "./api";
 import { errorHandler } from "./error-handler";
 
 export { app } from "./api";
-
 export * from "./api/find";
 export * from "./api/file";
 export * from "./api/artist";

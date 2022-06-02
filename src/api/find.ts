@@ -1,5 +1,6 @@
 import { Request } from "express";
 import { Api } from "musa-core";
+
 import { app } from "../api";
 
 app.get("/find/:query", async (req: Request<{ query: string }>, res) => {

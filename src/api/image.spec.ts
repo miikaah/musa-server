@@ -1,4 +1,5 @@
 import supertest from "supertest";
+
 import * as index from "../";
 import { imageFixture } from "../../test-utils/image.fixture";
 

@@ -1,5 +1,6 @@
 import supertest from "supertest";
 import { Api } from "musa-core";
+
 import { app } from "../";
 import { findQueryFixture, emptyFindResultFixture } from "../../test-utils/find.fixture";
 

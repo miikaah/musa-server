@@ -1,5 +1,6 @@
 import supertest from "supertest";
 import { Api } from "musa-core";
+
 import { app } from "../";
 import { albumFixture } from "../../test-utils/album.fixture";
 
