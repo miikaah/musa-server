@@ -18,7 +18,7 @@ describe("Album API tests", () => {
     const id = "foo";
     const route = `/album/${id}`;
 
-    it("should get 200 and the album", async () => {
+    it("should return 200 and the album", async () => {
       const response = await request.get(route).expect(200);
 
       expect(response.body).toEqual(albumFixture);
@@ -26,7 +26,7 @@ describe("Album API tests", () => {
       expect(Api.getAlbumById).toHaveBeenCalledWith(id);
     });
 
-    it("should get 200 and an empty object if album doesn't exist", async () => {
+    it("should return 200 and an empty object if album doesn't exist", async () => {
       (Api.getAlbumById as jest.MockedFunction<typeof Api.getAlbumById>).mockResolvedValueOnce(
         <any>{}
       );
@@ -34,6 +34,20 @@ describe("Album API tests", () => {
       const response = await request.get(route).expect(200);
 
       expect(response.body).toEqual({});
+      expect(Api.getAlbumById).toHaveBeenCalledTimes(1);
+      expect(Api.getAlbumById).toHaveBeenCalledWith(id);
+    });
+
+    it("should return 500 if getAlbumById throws an error", async () => {
+      (Api.getAlbumById as jest.MockedFunction<typeof Api.getAlbumById>).mockImplementationOnce(
+        () => {
+          throw new Error("err");
+        }
+      );
+
+      const response = await request.get(route).expect(500);
+
+      expect(response.body).toEqual({ message: "Internal Server Error" });
       expect(Api.getAlbumById).toHaveBeenCalledTimes(1);
       expect(Api.getAlbumById).toHaveBeenCalledWith(id);
     });

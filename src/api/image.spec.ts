@@ -16,13 +16,13 @@ describe("Image API tests", () => {
     const id = "foo";
     const route = `/image/${id}`;
 
-    it("should get 200 and the image", async () => {
+    it("should return 200 and the image", async () => {
       const response = await request.get(route).expect(200);
 
       expect(response.body).toEqual(imageFixture);
     });
 
-    it("should get 404 if the image doesn't exist", async () => {
+    it("should return 404 if the image doesn't exist", async () => {
       const response = await request.get("/image/bar").expect(404);
 
       expect(response.body).toEqual({ message: "Not Found" });

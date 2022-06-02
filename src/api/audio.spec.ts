@@ -18,7 +18,7 @@ describe("Audio API tests", () => {
     const id = "foo";
     const route = `/audio/${id}`;
 
-    it("should get 200 and the audio", async () => {
+    it("should return 200 and the audio", async () => {
       const response = await request.get(route).expect(200);
 
       expect(response.body).toEqual(audioFixture);
@@ -26,7 +26,7 @@ describe("Audio API tests", () => {
       expect(Api.getAudioById).toHaveBeenCalledWith({ id });
     });
 
-    it("should get 200 and an empty object if audio doesn't exist", async () => {
+    it("should return 200 and an empty object if audio doesn't exist", async () => {
       (Api.getAudioById as jest.MockedFunction<typeof Api.getAudioById>).mockResolvedValueOnce(
         <any>{}
       );
@@ -36,6 +36,19 @@ describe("Audio API tests", () => {
       expect(response.body).toEqual({});
       expect(Api.getAudioById).toHaveBeenCalledTimes(1);
       expect(Api.getAudioById).toHaveBeenCalledWith({ id });
+    });
+
+    it("should return 500 if getAudioById throws an error", async () => {
+      (Api.getAudioById as jest.MockedFunction<typeof Api.getAudioById>).mockImplementationOnce(
+        () => {
+          throw new Error("err");
+        }
+      );
+
+      const response = await request.get(route).expect(500);
+
+      expect(response.body).toEqual({ message: "Internal Server Error" });
+      expect(Api.getAudioById).toHaveBeenCalledTimes(1);
     });
   });
 });
