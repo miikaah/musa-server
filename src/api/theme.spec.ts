@@ -30,18 +30,6 @@ describe("Theme API tests", () => {
       expect(Api.getTheme).toHaveBeenCalledWith(id);
     });
 
-    it("should return 404 if theme doesn't exist", async () => {
-      (Api.getTheme as jest.MockedFunction<typeof Api.getTheme>).mockResolvedValueOnce(
-        <any>undefined
-      );
-
-      const response = await request.get(route).expect(404);
-
-      expect(response.body).toEqual({ message: "Not Found" });
-      expect(Api.getTheme).toHaveBeenCalledTimes(1);
-      expect(Api.getTheme).toHaveBeenCalledWith(id);
-    });
-
     it("should return 500 if getTheme throws an error", async () => {
       (Api.getTheme as jest.MockedFunction<typeof Api.getTheme>).mockImplementationOnce(() => {
         throw new Error("err");
