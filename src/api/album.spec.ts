@@ -5,7 +5,6 @@ import { app } from "../";
 import { albumFixture } from "../../test-utils/album.fixture";
 
 jest.mock("musa-core");
-
 (Api.getAlbumById as jest.MockedFunction<typeof Api.getAlbumById>).mockResolvedValue(albumFixture);
 
 const request = supertest(app);

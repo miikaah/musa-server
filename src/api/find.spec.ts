@@ -5,7 +5,6 @@ import { app } from "../";
 import { findQueryFixture, emptyFindResultFixture } from "../../test-utils/find.fixture";
 
 jest.mock("musa-core");
-
 (Api.find as jest.MockedFunction<typeof Api.find>).mockResolvedValue(findQueryFixture);
 (Api.findRandom as jest.MockedFunction<typeof Api.findRandom>).mockResolvedValue(findQueryFixture);
 

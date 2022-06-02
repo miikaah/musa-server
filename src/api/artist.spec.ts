@@ -9,7 +9,6 @@ import {
 } from "../../test-utils/artist.fixture";
 
 jest.mock("musa-core");
-
 (Api.getArtistById as jest.MockedFunction<typeof Api.getArtistById>).mockResolvedValue(
   artistFixture
 );

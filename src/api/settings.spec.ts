@@ -5,7 +5,6 @@ import { app } from "../";
 import { settingsFixture, settingsPayloadFixture } from "../../test-utils/settings.fixture";
 
 jest.mock("musa-core");
-
 (Fs.getState as jest.MockedFunction<typeof Fs.getState>).mockResolvedValue(settingsFixture);
 
 const request = supertest(app);

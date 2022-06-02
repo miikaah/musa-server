@@ -5,7 +5,6 @@ import { app } from "../";
 import { themeFixture, themePayloadFixture } from "../../test-utils/theme.fixture";
 
 jest.mock("musa-core");
-
 (Api.getTheme as jest.MockedFunction<typeof Api.getTheme>).mockResolvedValue(themeFixture);
 (Api.insertTheme as jest.MockedFunction<typeof Api.insertTheme>).mockResolvedValue(themeFixture);
 (Api.getAllThemes as jest.MockedFunction<typeof Api.getAllThemes>).mockResolvedValue([

@@ -5,7 +5,6 @@ import { app } from "../";
 import { audioFixture } from "../../test-utils/audio.fixture";
 
 jest.mock("musa-core");
-
 (Api.getAudioById as jest.MockedFunction<typeof Api.getAudioById>).mockResolvedValue(audioFixture);
 
 const request = supertest(app);
