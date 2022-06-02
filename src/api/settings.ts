@@ -1,10 +1,14 @@
 import { Request } from "express";
+import { Fs, State } from "musa-core";
 
 import { app } from "../api";
-import { getState, setState, State } from "../fs.state";
+
+const { NODE_ENV } = process.env;
+const isDev = NODE_ENV === "local";
+const stateFile = `${isDev ? ".dev" : ""}.musa-server.state.v1.json`;
 
 app.get("/state", async (_req, res) => {
-  const settings = await getState();
+  const settings = await Fs.getState(stateFile);
 
   if (!settings) {
     res.status(404).json({ message: "Not Found" });
@@ -17,7 +21,7 @@ app.get("/state", async (_req, res) => {
 app.put("/state", async (req: Request<unknown, unknown, { settings: State }>, res) => {
   const { settings } = req.body;
 
-  await setState(settings);
+  await Fs.setState(stateFile, settings);
 
   res.status(200).json(settings);
 });

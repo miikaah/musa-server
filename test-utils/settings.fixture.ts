@@ -1,4 +1,4 @@
-import { State } from "../src/fs.state";
+import { State } from "musa-core";
 
 export const settingsPayloadFixture: { settings: State } = {
   settings: {

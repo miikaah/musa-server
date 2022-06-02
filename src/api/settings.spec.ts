@@ -1,12 +1,12 @@
 import supertest from "supertest";
+import { Fs } from "musa-core";
 
-import { setState, getState } from "../fs.state";
 import { app } from "../";
 import { settingsFixture, settingsPayloadFixture } from "../../test-utils/settings.fixture";
 
-jest.mock("../fs.state");
+jest.mock("musa-core");
 
-(getState as jest.MockedFunction<typeof getState>).mockResolvedValue(settingsFixture);
+(Fs.getState as jest.MockedFunction<typeof Fs.getState>).mockResolvedValue(settingsFixture);
 
 const request = supertest(app);
 
@@ -22,27 +22,30 @@ describe("Settings API tests", () => {
       const response = await request.get(route).expect(200);
 
       expect(response.body).toEqual(settingsFixture);
-      expect(getState).toHaveBeenCalledTimes(1);
+      expect(Fs.getState).toHaveBeenCalledTimes(1);
+      expect(Fs.getState).toHaveBeenCalledWith(expect.any(String));
     });
 
     it("should return 404 if the settings file doesn't exist", async () => {
-      (getState as jest.MockedFunction<typeof getState>).mockResolvedValueOnce(undefined);
+      (Fs.getState as jest.MockedFunction<typeof Fs.getState>).mockResolvedValueOnce(undefined);
 
       const response = await request.get(route).expect(404);
 
       expect(response.body).toEqual({ message: "Not Found" });
-      expect(getState).toHaveBeenCalledTimes(1);
+      expect(Fs.getState).toHaveBeenCalledTimes(1);
+      expect(Fs.getState).toHaveBeenCalledWith(expect.any(String));
     });
 
-    it("should return 500 if getState throws an error", async () => {
-      (getState as jest.MockedFunction<typeof getState>).mockImplementationOnce(() => {
+    it("should return 500 if Fs.getState throws an error", async () => {
+      (Fs.getState as jest.MockedFunction<typeof Fs.getState>).mockImplementationOnce(() => {
         throw new Error("err");
       });
 
       const response = await request.get(route).expect(500);
 
       expect(response.body).toEqual({ message: "Internal Server Error" });
-      expect(getState).toHaveBeenCalledTimes(1);
+      expect(Fs.getState).toHaveBeenCalledTimes(1);
+      expect(Fs.getState).toHaveBeenCalledWith(expect.any(String));
     });
   });
 
@@ -53,20 +56,20 @@ describe("Settings API tests", () => {
       const response = await request.put(route).send(settingsPayloadFixture).expect(200);
 
       expect(response.body).toEqual(settingsFixture);
-      expect(setState).toHaveBeenCalledTimes(1);
-      expect(setState).toHaveBeenCalledWith(settingsFixture);
+      expect(Fs.setState).toHaveBeenCalledTimes(1);
+      expect(Fs.setState).toHaveBeenCalledWith(expect.any(String), settingsFixture);
     });
 
-    it("should return 500 if setState throws an error", async () => {
-      (setState as jest.MockedFunction<typeof setState>).mockImplementationOnce(() => {
+    it("should return 500 if Fs.setState throws an error", async () => {
+      (Fs.setState as jest.MockedFunction<typeof Fs.setState>).mockImplementationOnce(() => {
         throw new Error("err");
       });
 
       const response = await request.put(route).send(settingsPayloadFixture).expect(500);
 
       expect(response.body).toEqual({ message: "Internal Server Error" });
-      expect(setState).toHaveBeenCalledTimes(1);
-      expect(setState).toHaveBeenCalledWith(settingsFixture);
+      expect(Fs.setState).toHaveBeenCalledTimes(1);
+      expect(Fs.setState).toHaveBeenCalledWith(expect.any(String), settingsFixture);
     });
   });
 });
