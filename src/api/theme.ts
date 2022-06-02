@@ -9,14 +9,8 @@ app.get("/themes", async (_req, res) => {
 
 app.get("/theme/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
-  const theme = await Api.getTheme(id);
 
-  if (!theme) {
-    res.status(404).json({ message: "Not Found" });
-    return;
-  }
-
-  res.status(200).json(theme);
+  res.status(200).json(await Api.getTheme(id));
 });
 
 app.put("/theme/:id", async (req: Request<{ id: string }, unknown, { colors: unknown }>, res) => {

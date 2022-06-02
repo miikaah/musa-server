@@ -2,10 +2,13 @@ import { Request, Response, NextFunction } from "express";
 
 const { NODE_ENV } = process.env;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const errorHandler = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
+export const errorHandler = (err: Error, _req: Request, res: Response, next: NextFunction) => {
   if (NODE_ENV !== "test") {
     console.error(err);
+  }
+
+  if (res.headersSent) {
+    return next();
   }
 
   if (NODE_ENV === "production" || NODE_ENV === "test") {
