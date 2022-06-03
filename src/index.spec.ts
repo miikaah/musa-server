@@ -5,6 +5,8 @@ import { errorHandler } from "./error-handler";
 import { start } from ".";
 
 jest.mock("musa-core");
+(Scanner.init as jest.MockedFunction<typeof Scanner.init>).mockResolvedValue(<any>{});
+
 jest.mock("./api");
 
 describe("Index tests", () => {
