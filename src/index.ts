@@ -20,10 +20,10 @@ const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
 
 export let imageCollection: FileCollection = {};
 
-const start = async () => {
+export const start = async () => {
   app.use(errorHandler);
 
-  if (NODE_ENV === "test") {
+  if (NODE_ENV === "test" && !process.env.FORCE_SERVER_START) {
     return;
   }
 
@@ -33,10 +33,13 @@ const start = async () => {
     baseUrl,
     isElectron: false,
   });
-  imageCollection = mediaCollection.imageCollection;
+  imageCollection = mediaCollection.imageCollection || {};
 
   app.listen(PORT, async () => {
-    console.log(`Serving ${baseUrl}\n`);
+    if (NODE_ENV !== "test") {
+      console.log(`Serving ${baseUrl}\n`);
+    }
+
     Scanner.update({});
   });
 };
