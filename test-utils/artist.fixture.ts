@@ -1,4 +1,6 @@
-export const artistFixture = {
+import { Artist, ArtistObject, ArtistWithEnrichedAlbums } from "musa-core";
+
+export const artistFixture: Artist = {
   url: "http://100.79.27.108:4200/artist/QXQgVGhlIEdhdGVz",
   name: "At The Gates",
   albums: [
@@ -15,7 +17,7 @@ export const artistFixture = {
   images: [],
 };
 
-export const artistsFixture = {
+export const artistsFixture: ArtistObject = {
   A: [
     {
       id: "QWd1c3RpbiBCYXJyaW9zIE1hbmdvcmU",
@@ -25,7 +27,7 @@ export const artistsFixture = {
   ],
 };
 
-export const artistAlbumsFixture = {
+export const artistAlbumsFixture: ArtistWithEnrichedAlbums = {
   url: "http://100.79.27.108:4200/artist/QW5keSBNY2tlZQ",
   name: "Andy Mckee",
   albums: [

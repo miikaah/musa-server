@@ -27,7 +27,7 @@ export const start = async () => {
     return;
   }
 
-  Db.init(MUSA_SRC_PATH);
+  await Db.init(MUSA_SRC_PATH);
   const mediaCollection = await Scanner.init({
     musicLibraryPath: MUSA_SRC_PATH,
     baseUrl,

@@ -1,4 +1,6 @@
-export const albumFixture = {
+import { AlbumWithFilesAndMetadata } from "musa-core";
+
+export const albumFixture: AlbumWithFilesAndMetadata = {
   name: "At War With Reality",
   artistName: "At The Gates",
   artistUrl: "http://100.79.27.108:4200/artist/QXQgVGhlIEdhdGVz",
