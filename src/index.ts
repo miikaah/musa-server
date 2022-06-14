@@ -17,6 +17,7 @@ export * from "./api/static";
 const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
 
 const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
+const musicLibraryPath = MUSA_SRC_PATH;
 
 export let imageCollection: FileCollection = {};
 
@@ -27,9 +28,9 @@ export const start = async () => {
     return;
   }
 
-  await Db.init(MUSA_SRC_PATH);
+  await Db.init(musicLibraryPath);
   const mediaCollection = await Scanner.init({
-    musicLibraryPath: MUSA_SRC_PATH,
+    musicLibraryPath,
     baseUrl,
     isElectron: false,
   });
@@ -40,7 +41,7 @@ export const start = async () => {
       console.log(`Serving ${baseUrl}\n`);
     }
 
-    Scanner.update({});
+    Scanner.update({ musicLibraryPath });
   });
 };
 
