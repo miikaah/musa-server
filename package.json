@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "env-cmd -f .env nodemon --watch ./src --ext ts --exec ts-node --transpile-only src/index.ts",
-    "start": "env-cmd -f .env.prod ts-node --transpile-only src/index.ts",
-    "build": "shx rm -rf dist && tsc --project tsconfig.build.json && shx cp ./{package.json,package-lock.json} dist/ && cd dist && npm ci --prod --no-optional",
+    "start": "env-cmd -f .env.prod node dist/index.js",
+    "build": "shx rm -rf dist && esbuild src/index.ts --bundle --platform=node --target=node16 --outdir=dist",
     "tsc:w": "tsc --watch --noEmit",
     "test": "jest --coverage",
     "test:w": "jest --watch"
@@ -18,8 +18,7 @@
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "env-cmd": "^10.1.0",
-    "express": "^5.0.0-beta.1",
-    "ts-node": "^10.8.0"
+    "express": "^5.0.0-beta.1"
   },
   "devDependencies": {
     "@swc/core": "^1.2.196",
@@ -33,6 +32,7 @@
     "@types/urlsafe-base64": "^1.0.28",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
+    "esbuild": "^0.14.49",
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -41,6 +41,7 @@
     "prettier": "^2.6.2",
     "shx": "^0.3.4",
     "supertest": "^6.2.3",
+    "ts-node": "^10.8.0",
     "typescript": "^4.7.2"
   }
 }
