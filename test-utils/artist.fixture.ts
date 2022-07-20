@@ -1,4 +1,4 @@
-import { Artist, ArtistObject, ArtistWithEnrichedAlbums } from "musa-core";
+import { Artist, ArtistObject, ArtistWithEnrichedAlbums } from "@miikaah/musa-core";
 
 export const artistFixture: Artist = {
   url: "http://100.79.27.108:4200/artist/QXQgVGhlIEdhdGVz",

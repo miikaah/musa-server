@@ -1,4 +1,4 @@
-import { AlbumWithFilesAndMetadata } from "musa-core";
+import { AlbumWithFilesAndMetadata } from "@miikaah/musa-core";
 
 export const albumFixture: AlbumWithFilesAndMetadata = {
   name: "At War With Reality",

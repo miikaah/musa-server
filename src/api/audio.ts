@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Api } from "musa-core";
+import { Api } from "@miikaah/musa-core";
 
 import { app } from "../api";
 

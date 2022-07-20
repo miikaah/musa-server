@@ -1,4 +1,4 @@
-import { Db, Scanner } from "musa-core";
+import { Db, Scanner } from "@miikaah/musa-core";
 
 import { app } from "./api";
 import { errorHandler } from "./error-handler";

@@ -1,4 +1,4 @@
-import { AudioWithMetadata } from "musa-core";
+import { AudioWithMetadata } from "@miikaah/musa-core";
 
 export const audioFixture: AudioWithMetadata = {
   id: "TXVjaGFjaGl0byBCb21ibyBJbmZpZXJub1xNdWNoYWNoaXRvX0JvbWJvX0luZmllcm5vLVZpc3RvX0xvX1Zpc3RvLmJ5LlB1Y2hhY2hlbGVzXDA3LW11Y2hhY2hpdG8tYWlyZS53d3cucmlvamF0b3JyZW50LmNvbS5tcDM",

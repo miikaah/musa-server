@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import { Api } from "musa-core";
+import { Api } from "@miikaah/musa-core";
 
 import { app } from "../";
 import { themeFixture, themePayloadFixture } from "../../test-utils/theme.fixture";

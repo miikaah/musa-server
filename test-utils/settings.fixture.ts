@@ -1,4 +1,4 @@
-import { State } from "musa-core";
+import { State } from "@miikaah/musa-core";
 
 export const settingsPayloadFixture: { settings: State } = {
   settings: {

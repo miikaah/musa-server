@@ -1,4 +1,4 @@
-import { Theme } from "musa-core";
+import { Theme } from "@miikaah/musa-core";
 
 export const themeFixture: Theme = {
   id: "QXQgVGhlIEdhdGVzXFNsYXVnaHRlcm91cyBTb3Vsc1xTbGF1Z2h0ZXJvdXMgU291bHMuanBn",

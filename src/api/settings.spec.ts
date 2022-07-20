@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import { Fs } from "musa-core";
+import { Fs } from "@miikaah/musa-core";
 
 import { app } from "../";
 import { settingsFixture, settingsPayloadFixture } from "../../test-utils/settings.fixture";
