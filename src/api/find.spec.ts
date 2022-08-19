@@ -4,9 +4,9 @@ import { Api } from "@miikaah/musa-core";
 import { app } from "../";
 import { findQueryFixture, emptyFindResultFixture } from "../../test-utils/find.fixture";
 
-jest.mock("musa-core");
-(Api.find as jest.MockedFunction<typeof Api.find>).mockResolvedValue(findQueryFixture);
-(Api.findRandom as jest.MockedFunction<typeof Api.findRandom>).mockResolvedValue(findQueryFixture);
+jest.mock("@miikaah/musa-core");
+jest.mocked(Api.find).mockResolvedValue(findQueryFixture);
+jest.mocked(Api.findRandom).mockResolvedValue(findQueryFixture);
 
 const request = supertest(app);
 
@@ -17,38 +17,38 @@ describe("Find API tests", () => {
 
   describe("GET /find/:query", () => {
     const query = "foo";
+    const limit = 32;
     const route = `/find/${query}`;
 
     it("should return 200 and the results", async () => {
-      const response = await request.get(route).expect(200);
+      const response = await request.get(route);
 
+      expect(response.status).toBe(200);
       expect(response.body).toEqual(findQueryFixture);
       expect(Api.find).toHaveBeenCalledTimes(1);
-      expect(Api.find).toHaveBeenCalledWith({ query });
+      expect(Api.find).toHaveBeenCalledWith({ query, limit });
     });
 
     it("should return 200 and a default empty result set", async () => {
-      (Api.find as jest.MockedFunction<typeof Api.find>).mockResolvedValueOnce(
-        <any>emptyFindResultFixture
-      );
+      jest.mocked(Api.find).mockResolvedValueOnce(<any>emptyFindResultFixture);
 
-      const response = await request.get(route).expect(200);
+      const response = await request.get(route);
 
+      expect(response.status).toBe(200);
       expect(response.body).toEqual(emptyFindResultFixture);
       expect(Api.find).toHaveBeenCalledTimes(1);
-      expect(Api.find).toHaveBeenCalledWith({ query });
+      expect(Api.find).toHaveBeenCalledWith({ query, limit });
     });
 
     it("should return 500 if find throws an error", async () => {
-      (Api.find as jest.MockedFunction<typeof Api.find>).mockImplementationOnce(() => {
-        throw new Error("err");
-      });
+      jest.mocked(Api.find).mockRejectedValueOnce(new Error("err"));
 
-      const response = await request.get(route).expect(500);
+      const response = await request.get(route);
 
+      expect(response.status).toBe(500);
       expect(response.body).toEqual({ message: "Internal Server Error" });
       expect(Api.find).toHaveBeenCalledTimes(1);
-      expect(Api.find).toHaveBeenCalledWith({ query });
+      expect(Api.find).toHaveBeenCalledWith({ query, limit });
     });
   });
 
@@ -56,19 +56,19 @@ describe("Find API tests", () => {
     const route = "/find-random";
 
     it("should return 200 and the results", async () => {
-      const response = await request.get(route).expect(200);
+      const response = await request.get(route);
 
+      expect(response.status).toBe(200);
       expect(response.body).toEqual(findQueryFixture);
       expect(Api.findRandom).toHaveBeenCalledTimes(1);
     });
 
     it("should return 500 if findRandom throws an error", async () => {
-      (Api.findRandom as jest.MockedFunction<typeof Api.findRandom>).mockImplementationOnce(() => {
-        throw new Error("err");
-      });
+      jest.mocked(Api.findRandom).mockRejectedValueOnce(new Error("err"));
 
-      const response = await request.get(route).expect(500);
+      const response = await request.get(route);
 
+      expect(response.status).toBe(500);
       expect(response.body).toEqual({ message: "Internal Server Error" });
       expect(Api.findRandom).toHaveBeenCalledTimes(1);
     });

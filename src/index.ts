@@ -1,7 +1,8 @@
-import { Db, Scanner, FileCollection } from "@miikaah/musa-core";
+import { Db, Scanner } from "@miikaah/musa-core";
 
 import { app } from "./api";
 import { errorHandler } from "./error-handler";
+import { setImageCollection } from "./repo";
 
 export { app } from "./api";
 export * from "./api/find";
@@ -19,8 +20,6 @@ const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env
 const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
 const musicLibraryPath = MUSA_SRC_PATH;
 
-export let imageCollection: FileCollection = {};
-
 export const start = async () => {
   app.use(errorHandler);
 
@@ -34,7 +33,7 @@ export const start = async () => {
     baseUrl,
     isElectron: false,
   });
-  imageCollection = mediaCollection.imageCollection || {};
+  setImageCollection(mediaCollection.imageCollection || {});
 
   app.listen(PORT, async () => {
     if (NODE_ENV !== "test") {

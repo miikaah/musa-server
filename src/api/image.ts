@@ -1,11 +1,11 @@
 import { Request } from "express";
 
 import { app } from "../api";
-import { imageCollection } from "../";
+import { getImageCollection } from "../repo";
 
 app.get("/image/:id", (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
-  const image = imageCollection[id];
+  const image = getImageCollection()[id];
 
   if (!image) {
     res.status(404).json({ message: "Not Found" });

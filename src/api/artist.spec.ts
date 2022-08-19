@@ -8,14 +8,10 @@ import {
   artistAlbumsFixture,
 } from "../../test-utils/artist.fixture";
 
-jest.mock("musa-core");
-(Api.getArtistById as jest.MockedFunction<typeof Api.getArtistById>).mockResolvedValue(
-  artistFixture
-);
-(Api.getArtists as jest.MockedFunction<typeof Api.getArtists>).mockResolvedValue(artistsFixture);
-(Api.getArtistAlbums as jest.MockedFunction<typeof Api.getArtistAlbums>).mockResolvedValue(
-  artistAlbumsFixture
-);
+jest.mock("@miikaah/musa-core");
+jest.mocked(Api.getArtistById).mockResolvedValue(artistFixture);
+jest.mocked(Api.getArtists).mockResolvedValue(artistsFixture);
+jest.mocked(Api.getArtistAlbums).mockResolvedValue(artistAlbumsFixture);
 
 const request = supertest(app);
 
@@ -29,7 +25,7 @@ describe("Artist API tests", () => {
     const route = `/artist/${id}`;
 
     it("should return 200 and the artist", async () => {
-      const response = await request.get(route).expect(200);
+      const response = await request.get(route);
 
       expect(response.body).toEqual(artistFixture);
       expect(Api.getArtistById).toHaveBeenCalledTimes(1);
@@ -37,26 +33,22 @@ describe("Artist API tests", () => {
     });
 
     it("should return 200 and an empty object if artist doesn't exist", async () => {
-      (Api.getArtistById as jest.MockedFunction<typeof Api.getArtistById>).mockResolvedValueOnce(
-        <any>{}
-      );
+      jest.mocked(Api.getArtistById).mockResolvedValueOnce(<any>{});
 
-      const response = await request.get(route).expect(200);
+      const response = await request.get(route);
 
+      expect(response.status).toBe(200);
       expect(response.body).toEqual({});
       expect(Api.getArtistById).toHaveBeenCalledTimes(1);
       expect(Api.getArtistById).toHaveBeenCalledWith(id);
     });
 
     it("should return 500 if getArtistById throws an error", async () => {
-      (Api.getArtistById as jest.MockedFunction<typeof Api.getArtistById>).mockImplementationOnce(
-        () => {
-          throw new Error("err");
-        }
-      );
+      jest.mocked(Api.getArtistById).mockRejectedValueOnce(new Error("err"));
 
-      const response = await request.get(route).expect(500);
+      const response = await request.get(route);
 
+      expect(response.status).toBe(500);
       expect(response.body).toEqual({ message: "Internal Server Error" });
       expect(Api.getArtistById).toHaveBeenCalledTimes(1);
       expect(Api.getArtistById).toHaveBeenCalledWith(id);
@@ -67,19 +59,19 @@ describe("Artist API tests", () => {
     const route = `/artists`;
 
     it("should return 200 and the artist", async () => {
-      const response = await request.get(route).expect(200);
+      const response = await request.get(route);
 
+      expect(response.status).toBe(200);
       expect(response.body).toEqual(artistsFixture);
       expect(Api.getArtists).toHaveBeenCalledTimes(1);
     });
 
     it("should return 500 if getArtists throws an error", async () => {
-      (Api.getArtists as jest.MockedFunction<typeof Api.getArtists>).mockImplementationOnce(() => {
-        throw new Error("err");
-      });
+      jest.mocked(Api.getArtists).mockRejectedValueOnce(new Error("err"));
 
-      const response = await request.get(route).expect(500);
+      const response = await request.get(route);
 
+      expect(response.status).toBe(500);
       expect(response.body).toEqual({ message: "Internal Server Error" });
       expect(Api.getArtists).toHaveBeenCalledTimes(1);
     });
@@ -89,21 +81,19 @@ describe("Artist API tests", () => {
     const route = `/artist-albums/:id`;
 
     it("should return 200 and the artist", async () => {
-      const response = await request.get(route).expect(200);
+      const response = await request.get(route);
 
+      expect(response.status).toBe(200);
       expect(response.body).toEqual(artistAlbumsFixture);
       expect(Api.getArtistAlbums).toHaveBeenCalledTimes(1);
     });
 
     it("should return 500 if getArtistAlbums throws an error", async () => {
-      (
-        Api.getArtistAlbums as jest.MockedFunction<typeof Api.getArtistAlbums>
-      ).mockImplementationOnce(() => {
-        throw new Error("err");
-      });
+      jest.mocked(Api.getArtistAlbums).mockRejectedValueOnce(new Error("err"));
 
-      const response = await request.get(route).expect(500);
+      const response = await request.get(route);
 
+      expect(response.status).toBe(500);
       expect(response.body).toEqual({ message: "Internal Server Error" });
       expect(Api.getArtistAlbums).toHaveBeenCalledTimes(1);
     });
