@@ -13,6 +13,7 @@ export * from "./api/audio";
 export * from "./api/image";
 export * from "./api/settings";
 export * from "./api/theme";
+export * from "./api/genre";
 export * from "./api/static";
 
 const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
