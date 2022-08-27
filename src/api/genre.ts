@@ -1,5 +1,4 @@
-import { Api } from "@miikaah/musa-core";
-
+import { Api } from "../musa-core-import";
 import { app } from "../api";
 
 app.get("/genres", async (_req, res) => {

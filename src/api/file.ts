@@ -9,7 +9,7 @@ const options = {
   root: MUSA_SRC_PATH,
 };
 
-app.get("/file/:name", (req: Request<{ name: string }>, res, next) => {
+app.get("/files/:name", (req: Request<{ name: string }>, res, next) => {
   const { name } = req.params;
   const filename = UrlSafeBase64.decode(name);
 

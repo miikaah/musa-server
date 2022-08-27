@@ -1,5 +1,4 @@
-import { Db, Scanner } from "@miikaah/musa-core";
-
+import { Db, Scanner } from "./musa-core-import";
 import { app } from "./api";
 import { errorHandler } from "./error-handler";
 import { setImageCollection } from "./repo";
@@ -33,6 +32,11 @@ export const start = async () => {
     musicLibraryPath,
     baseUrl,
     isElectron: false,
+    artistUrlFragment: "artists",
+    albumUrlFragment: "albums",
+    audioUrlFragment: "audios",
+    imageUrlFragment: "images",
+    fileUrlFragment: "files",
   });
   setImageCollection(mediaCollection.imageCollection || {});
 

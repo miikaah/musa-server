@@ -1,13 +1,13 @@
 import { Request } from "express";
-import { Fs, State } from "@miikaah/musa-core";
 
+import { Fs, State } from "../musa-core-import";
 import { app } from "../api";
 
 const { NODE_ENV } = process.env;
 const isDev = NODE_ENV === "local";
 const stateFile = `${isDev ? ".dev" : ""}.musa-server.state.v1.json`;
 
-app.get("/state", async (_req, res) => {
+app.get("/settings", async (_req, res) => {
   const settings = await Fs.getState(stateFile);
 
   if (!settings) {
@@ -18,7 +18,7 @@ app.get("/state", async (_req, res) => {
   res.status(200).json(settings);
 });
 
-app.put("/state", async (req: Request<unknown, unknown, { settings: State }>, res) => {
+app.put("/settings", async (req: Request<unknown, unknown, { settings: State }>, res) => {
   const { settings } = req.body;
 
   await Fs.setState(stateFile, settings);

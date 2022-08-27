@@ -1,5 +1,4 @@
-import { FileCollection } from "@miikaah/musa-core";
-
+import { FileCollection } from "./musa-core-import";
 import { imageFixture } from "../test-utils/image.fixture";
 
 const { NODE_ENV } = process.env;
