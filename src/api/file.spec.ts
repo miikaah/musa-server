@@ -16,7 +16,10 @@ describe("File API tests", () => {
         .expect(200);
 
       expect(response.headers["content-type"]).toBe("text/plain; charset=utf-8");
-      expect(response.text).toBe("text\n");
+      expect(response.text).toMatchInlineSnapshot(`
+        "text
+        "
+      `);
     });
 
     it("should return 404 if file doesn't exist", async () => {
