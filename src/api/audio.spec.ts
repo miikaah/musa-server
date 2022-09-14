@@ -14,9 +14,9 @@ describe("Audio API tests", () => {
     jest.clearAllMocks();
   });
 
-  describe("GET /audio/:id", () => {
+  describe("GET /audios/:id", () => {
     const id = "foo";
-    const route = `/audio/${id}`;
+    const route = `/audios/${id}`;
 
     it("should return 200 and the audio", async () => {
       const response = await request.get(route);

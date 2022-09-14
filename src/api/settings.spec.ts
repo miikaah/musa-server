@@ -14,10 +14,10 @@ describe("Settings API tests", () => {
     jest.clearAllMocks();
   });
 
-  describe("GET /state", () => {
-    const route = `/state`;
+  describe("GET /settings", () => {
+    const route = `/settings`;
 
-    it("should return 200 and the state", async () => {
+    it("should return 200 and the settings", async () => {
       const response = await request.get(route);
 
       expect(response.status).toBe(200);
@@ -49,10 +49,10 @@ describe("Settings API tests", () => {
     });
   });
 
-  describe("PUT /state", () => {
-    const route = `/state`;
+  describe("PUT /settings", () => {
+    const route = `/settings`;
 
-    it("should return 200 and the state", async () => {
+    it("should return 200 and the settings", async () => {
       const response = await request.put(route).send(settingsPayloadFixture);
 
       expect(response.status).toBe(200);

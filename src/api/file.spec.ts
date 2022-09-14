@@ -7,7 +7,7 @@ import { app } from "../";
 const request = supertest(app);
 
 describe("File API tests", () => {
-  const route = "/file";
+  const route = "/files";
 
   describe(`GET ${route}/:name`, () => {
     it("should return 200 and the file", async () => {

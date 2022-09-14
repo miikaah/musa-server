@@ -20,9 +20,9 @@ describe("Artist API tests", () => {
     jest.clearAllMocks();
   });
 
-  describe("GET /artist/:id", () => {
+  describe("GET /artists/:id", () => {
     const id = "foo";
-    const route = `/artist/${id}`;
+    const route = `/artists/${id}`;
 
     it("should return 200 and the artist", async () => {
       const response = await request.get(route);
@@ -77,8 +77,8 @@ describe("Artist API tests", () => {
     });
   });
 
-  describe("GET /artist-albums/:id", () => {
-    const route = `/artist-albums/:id`;
+  describe("GET /artists/:id/albums", () => {
+    const route = `/artists/:id/albums`;
 
     it("should return 200 and the artist", async () => {
       const response = await request.get(route);

@@ -16,9 +16,9 @@ describe("Theme API tests", () => {
     jest.clearAllMocks();
   });
 
-  describe("GET /theme", () => {
+  describe("GET /themes/:id", () => {
     const id = "foo";
-    const route = `/theme/${id}`;
+    const route = `/themes/${id}`;
 
     it("should return 200 and the theme", async () => {
       const response = await request.get(route);
@@ -63,9 +63,9 @@ describe("Theme API tests", () => {
     });
   });
 
-  describe("PUT /theme/:id", () => {
+  describe("PUT /themes/:id", () => {
     const id = "foo";
-    const route = `/theme/${id}`;
+    const route = `/themes/${id}`;
 
     it("should return 201 and the theme", async () => {
       const response = await request.put(route).send(themePayloadFixture);
@@ -88,9 +88,9 @@ describe("Theme API tests", () => {
     });
   });
 
-  describe("DELETE /theme/:id", () => {
+  describe("DELETE /themes/:id", () => {
     const id = "foo";
-    const route = `/theme/${id}`;
+    const route = `/themes/${id}`;
 
     it("should return 201 and the theme", async () => {
       const response = await request.delete(route);

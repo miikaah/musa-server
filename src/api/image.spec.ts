@@ -6,9 +6,9 @@ import { imageFixture } from "../../test-utils/image.fixture";
 const request = supertest(app);
 
 describe("Image API tests", () => {
-  describe("GET /image/:id", () => {
+  describe("GET /images/:id", () => {
     const id = "foo";
-    const route = `/image/${id}`;
+    const route = `/images/${id}`;
 
     it("should return 200 and the image", async () => {
       const response = await request.get(route);
@@ -18,7 +18,7 @@ describe("Image API tests", () => {
     });
 
     it("should return 404 if the image doesn't exist", async () => {
-      const response = await request.get("/image/bar");
+      const response = await request.get("/images/bar");
 
       expect(response.status).toBe(404);
       expect(response.body).toEqual({ message: "Not Found" });

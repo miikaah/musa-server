@@ -21,6 +21,11 @@ describe("Index tests", () => {
     expect(Db.init).toHaveBeenCalledWith(process.cwd());
     expect(Scanner.init).toHaveBeenCalledWith({
       baseUrl: expect.any(String),
+      albumUrlFragment: "albums",
+      artistUrlFragment: "artists",
+      audioUrlFragment: "audios",
+      fileUrlFragment: "files",
+      imageUrlFragment: "images",
       isElectron: false,
       musicLibraryPath: expect.any(String),
     });

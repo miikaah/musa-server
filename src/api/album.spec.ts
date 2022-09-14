@@ -14,9 +14,9 @@ describe("Album API tests", () => {
     jest.clearAllMocks();
   });
 
-  describe("GET /album/:id", () => {
+  describe("GET /albums/:id", () => {
     const id = "foo";
-    const route = `/album/${id}`;
+    const route = `/albums/${id}`;
 
     it("should return 200 and the album", async () => {
       const response = await request.get(route);
