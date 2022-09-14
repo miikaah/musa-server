@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import { Api } from "@miikaah/musa-core";
+import { Api } from "../musa-core-import";
 
 import { app } from "../";
 import {
@@ -8,7 +8,7 @@ import {
   artistAlbumsFixture,
 } from "../../test-utils/artist.fixture";
 
-jest.mock("@miikaah/musa-core");
+jest.mock("../musa-core-import");
 jest.mocked(Api.getArtistById).mockResolvedValue(artistFixture);
 jest.mocked(Api.getArtists).mockResolvedValue(artistsFixture);
 jest.mocked(Api.getArtistAlbums).mockResolvedValue(artistAlbumsFixture);

@@ -1,10 +1,10 @@
 import supertest from "supertest";
-import { Api } from "@miikaah/musa-core";
+import { Api } from "../musa-core-import";
 
 import { app } from "../";
 import { albumFixture } from "../../test-utils/album.fixture";
 
-jest.mock("@miikaah/musa-core");
+jest.mock("../musa-core-import");
 jest.mocked(Api.getAlbumById).mockResolvedValue(albumFixture);
 
 const request = supertest(app);

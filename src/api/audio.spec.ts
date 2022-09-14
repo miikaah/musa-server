@@ -1,10 +1,10 @@
 import supertest from "supertest";
-import { Api } from "@miikaah/musa-core";
+import { Api } from "../musa-core-import";
 
 import { app } from "../";
 import { audioFixture } from "../../test-utils/audio.fixture";
 
-jest.mock("@miikaah/musa-core");
+jest.mock("../musa-core-import");
 jest.mocked(Api.getAudioById).mockResolvedValue(audioFixture);
 
 const request = supertest(app);

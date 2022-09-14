@@ -1,10 +1,10 @@
 import supertest from "supertest";
-import { Api } from "@miikaah/musa-core";
+import { Api } from "../musa-core-import";
 
 import { app } from "../";
 import { themeFixture, themePayloadFixture } from "../../test-utils/theme.fixture";
 
-jest.mock("@miikaah/musa-core");
+jest.mock("../musa-core-import");
 jest.mocked(Api.getTheme).mockResolvedValue(themeFixture);
 jest.mocked(Api.insertTheme).mockResolvedValue(themeFixture);
 jest.mocked(Api.getAllThemes).mockResolvedValue([themeFixture]);

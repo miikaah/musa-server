@@ -1,10 +1,10 @@
 import supertest from "supertest";
-import { Api } from "@miikaah/musa-core";
+import { Api } from "../musa-core-import";
 
 import { app } from "../";
 import { findQueryFixture, emptyFindResultFixture } from "../../test-utils/find.fixture";
 
-jest.mock("@miikaah/musa-core");
+jest.mock("../musa-core-import");
 jest.mocked(Api.find).mockResolvedValue(findQueryFixture);
 jest.mocked(Api.findRandom).mockResolvedValue(findQueryFixture);
 

@@ -1,10 +1,10 @@
 import supertest from "supertest";
-import { Fs } from "@miikaah/musa-core";
+import { Fs } from "../musa-core-import";
 
 import { app } from "../";
 import { settingsFixture, settingsPayloadFixture } from "../../test-utils/settings.fixture";
 
-jest.mock("@miikaah/musa-core");
+jest.mock("../musa-core-import");
 jest.mocked(Fs.getState).mockResolvedValue(settingsFixture);
 
 const request = supertest(app);

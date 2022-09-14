@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import { UrlSafeBase64 } from "@miikaah/musa-core";
+import { UrlSafeBase64 } from "../musa-core-import";
 import path from "path";
 
 import { app } from "../";

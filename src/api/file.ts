@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { UrlSafeBase64 } from "@miikaah/musa-core";
+import { UrlSafeBase64 } from "../musa-core-import";
 
 import { app } from "../api";
 
