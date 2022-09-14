@@ -9,9 +9,9 @@
     "build": "shx rm -rf dist && esbuild src/index.ts --bundle --platform=node --target=node16 --outdir=dist",
     "tsc:w": "tsc --watch --noEmit",
     "test": "jest --coverage",
+    "test:w": "jest --watch",
     "test:heap": "jest --coverage --runInBand --logHeapUsage",
-    "test:debug": "node --inspect-brk --expose-gc ./node_modules/.bin/jest",
-    "test:w": "jest --watch"
+    "test:debug": "node --inspect-brk --expose-gc ./node_modules/.bin/jest"
   },
   "author": "",
   "license": "MIT",
