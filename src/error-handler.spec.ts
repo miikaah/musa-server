@@ -1,5 +1,5 @@
-import { errorHandler } from "./error-handler";
 import { ResponseMock } from "../test-utils/response.mock";
+import { errorHandler } from "./error-handler";
 
 const nextMock = jest.fn();
 

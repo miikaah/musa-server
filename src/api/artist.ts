@@ -1,7 +1,7 @@
 import { Request } from "express";
 
-import { Api } from "../musa-core-import";
 import { app } from "../api";
+import { Api } from "../musa-core-import";
 
 app.get("/artists/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;

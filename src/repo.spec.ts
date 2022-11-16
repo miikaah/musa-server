@@ -1,5 +1,5 @@
-import { getImageCollection, setImageCollection } from "./repo";
 import { imageFixture } from "../test-utils/image.fixture";
+import { getImageCollection, setImageCollection } from "./repo";
 
 describe("Repo tests", () => {
   it("should set and get imageCollection", () => {

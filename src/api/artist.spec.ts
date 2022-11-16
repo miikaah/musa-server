@@ -3,9 +3,9 @@ import { Api } from "../musa-core-import";
 
 import { app } from "../";
 import {
+  artistAlbumsFixture,
   artistFixture,
   artistsFixture,
-  artistAlbumsFixture,
 } from "../../test-utils/artist.fixture";
 
 jest.mock("../musa-core-import");
