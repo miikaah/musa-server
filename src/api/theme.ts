@@ -20,6 +20,16 @@ app.put("/themes/:id", async (req: Request<{ id: string }, unknown, { colors: un
   res.status(201).json(await Api.insertTheme(id, colors));
 });
 
+app.patch(
+  "/themes/:id",
+  async (req: Request<{ id: string }, unknown, { colors: unknown }>, res) => {
+    const { id } = req.params;
+    const { colors } = req.body;
+
+    res.status(200).json(await Api.updateTheme(id, colors));
+  }
+);
+
 app.delete("/themes/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
 

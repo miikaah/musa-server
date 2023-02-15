@@ -7,6 +7,7 @@ import { themeFixture, themePayloadFixture } from "../../test-utils/theme.fixtur
 jest.mock("../musa-core-import");
 jest.mocked(Api.getTheme).mockResolvedValue(themeFixture);
 jest.mocked(Api.insertTheme).mockResolvedValue(themeFixture);
+jest.mocked(Api.updateTheme).mockResolvedValue(themeFixture);
 jest.mocked(Api.getAllThemes).mockResolvedValue([themeFixture]);
 
 const request = supertest(app);
@@ -85,6 +86,31 @@ describe("Theme API tests", () => {
       expect(response.body).toEqual({ message: "Internal Server Error" });
       expect(Api.insertTheme).toHaveBeenCalledTimes(1);
       expect(Api.insertTheme).toHaveBeenCalledWith(id, themePayloadFixture.colors);
+    });
+  });
+
+  describe("PATCH /themes/:id", () => {
+    const id = "foo";
+    const route = `/themes/${id}`;
+
+    it("should return 200 and the theme", async () => {
+      const response = await request.patch(route).send(themePayloadFixture);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(themeFixture);
+      expect(Api.updateTheme).toHaveBeenCalledTimes(1);
+      expect(Api.updateTheme).toHaveBeenCalledWith(id, themePayloadFixture.colors);
+    });
+
+    it("should return 500 if updateTheme throws an error", async () => {
+      jest.mocked(Api.updateTheme).mockRejectedValueOnce(new Error("err"));
+
+      const response = await request.patch(route).send(themePayloadFixture);
+
+      expect(response.status).toBe(500);
+      expect(response.body).toEqual({ message: "Internal Server Error" });
+      expect(Api.updateTheme).toHaveBeenCalledTimes(1);
+      expect(Api.updateTheme).toHaveBeenCalledWith(id, themePayloadFixture.colors);
     });
   });
 
