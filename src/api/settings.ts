@@ -7,7 +7,7 @@ const { NODE_ENV } = process.env;
 const isDev = NODE_ENV === "local";
 const stateFile = `${isDev ? ".dev" : ""}.musa-server.state.v1.json`;
 
-app.get("/settings", async (_req, res) => {
+app.get("/app-settings", async (_req, res) => {
   const settings = await Fs.getState(stateFile);
 
   if (!settings) {
@@ -18,7 +18,7 @@ app.get("/settings", async (_req, res) => {
   res.status(200).json(settings);
 });
 
-app.put("/settings", async (req: Request<unknown, unknown, { settings: State }>, res) => {
+app.put("/app-settings", async (req: Request<unknown, unknown, { settings: State }>, res) => {
   const { settings } = req.body;
 
   await Fs.setState(stateFile, settings);

@@ -10,13 +10,13 @@ jest.mocked(Fs.getState).mockResolvedValue(settingsFixture);
 const request = supertest(app);
 
 describe("Settings API tests", () => {
+  const route = `/app-settings`;
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe("GET /settings", () => {
-    const route = `/settings`;
-
+  describe(`GET ${route}`, () => {
     it("should return 200 and the settings", async () => {
       const response = await request.get(route);
 
@@ -49,9 +49,7 @@ describe("Settings API tests", () => {
     });
   });
 
-  describe("PUT /settings", () => {
-    const route = `/settings`;
-
+  describe(`PUT ${route}`, () => {
     it("should return 200 and the settings", async () => {
       const response = await request.put(route).send(settingsPayloadFixture);
 
