@@ -5,9 +5,10 @@ import { Fs, State } from "../musa-core-import";
 
 const { NODE_ENV } = process.env;
 const isDev = NODE_ENV === "local";
-const stateFile = `${isDev ? ".dev" : ""}.musa-server.state.v1.json`;
 
-app.get("/app-settings", async (_req, res) => {
+app.get("/app-settings", async (req, res) => {
+  const { currentProfile } = req.query;
+  const stateFile = `${isDev ? ".dev" : ""}${`.${currentProfile}` || ""}.musa-server.state.v1.json`;
   const settings = await Fs.getState(stateFile);
 
   if (!settings) {
@@ -19,6 +20,8 @@ app.get("/app-settings", async (_req, res) => {
 });
 
 app.put("/app-settings", async (req: Request<unknown, unknown, { settings: State }>, res) => {
+  const { currentProfile } = req.query;
+  const stateFile = `${isDev ? ".dev" : ""}${`.${currentProfile}` || ""}.musa-server.state.v1.json`;
   const { settings } = req.body;
 
   await Fs.setState(stateFile, settings);
