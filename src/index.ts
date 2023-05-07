@@ -27,6 +27,7 @@ export const start = async () => {
     return;
   }
 
+  console.log(`\n${new Date().toISOString()}\n`);
   await Db.init(musicLibraryPath);
   const mediaCollection = await Scanner.init({
     musicLibraryPath,
