@@ -1,3 +1,4 @@
+import { Server } from "http";
 import { app } from "./api";
 import { errorHandler } from "./error-handler";
 import { Db, Scanner } from "./musa-core-import";
@@ -20,6 +21,8 @@ const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env
 const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
 const musicLibraryPath = MUSA_SRC_PATH;
 
+let server: Server;
+
 export const start = async () => {
   app.use(errorHandler);
 
@@ -41,7 +44,7 @@ export const start = async () => {
   });
   setImageCollection(mediaCollection.imageCollection || {});
 
-  app.listen(PORT, async () => {
+  server = app.listen(PORT, async () => {
     if (NODE_ENV !== "test") {
       console.log(`Serving ${baseUrl}\n`);
     }
@@ -51,3 +54,14 @@ export const start = async () => {
 };
 
 start();
+
+process.on("SIGTERM", () => {
+  console.log("Received SIGTERM, shutting down gracefully...");
+
+  server.close(() => {
+    console.log("HTTP server closed");
+  });
+
+  console.log("Shutting down process");
+  process.exit(0);
+});
