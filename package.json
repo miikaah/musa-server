@@ -14,8 +14,8 @@
     "test:w": "jest --watch",
     "test:heap": "jest --coverage --runInBand --logHeapUsage",
     "test:debug": "node --inspect-brk --expose-gc ./node_modules/.bin/jest",
-    "isvc": "qckwinsvc --name MusaServer --script dist\\index.js --description MusaServer --startImmediately",
-    "uisvc": "qckwinsvc --uninstall --name MusaServer --script dist\\index.js"
+    "isvc": "env-cmd -f .env node scripts/isvc.js",
+    "uisvc": "env-cmd -f .env node scripts/uisvc.js"
   },
   "author": "",
   "license": "MIT",
