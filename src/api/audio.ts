@@ -1,6 +1,6 @@
 import { Request } from "express";
 
-import { app } from "../api";
+import { app } from "../express";
 import { Api } from "../musa-core-import";
 
 app.get("/audios/:id", async (req: Request<{ id: string }>, res) => {

@@ -1,6 +1,6 @@
 import { Request } from "express";
 
-import { app } from "../api";
+import { app } from "../express";
 import { Api } from "../musa-core-import";
 
 app.get("/themes", async (_req, res) => {
@@ -10,7 +10,15 @@ app.get("/themes", async (_req, res) => {
 app.get("/themes/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
 
-  res.status(200).json(await Api.getTheme(id));
+  let theme;
+  try {
+    theme = await Api.getTheme(id);
+  } catch (error) {
+    res.status(200).json({ status: "Not Found" });
+    return;
+  }
+
+  res.status(200).json(theme);
 });
 
 app.put("/themes/:id", async (req: Request<{ id: string }, unknown, { colors: unknown }>, res) => {

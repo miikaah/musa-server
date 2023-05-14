@@ -1,10 +1,9 @@
 import { Server } from "http";
-import { app } from "./api";
 import { errorHandler } from "./error-handler";
+import { app } from "./express";
 import { Db, Scanner } from "./musa-core-import";
 import { setImageCollection } from "./repo";
 
-export { app } from "./api";
 export * from "./api/album";
 export * from "./api/artist";
 export * from "./api/audio";
@@ -15,6 +14,7 @@ export * from "./api/image";
 export * from "./api/settings";
 export * from "./api/static";
 export * from "./api/theme";
+export { app } from "./express";
 
 const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
 

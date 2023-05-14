@@ -1,6 +1,6 @@
 import { Request } from "express";
 
-import { app } from "../api";
+import { app } from "../express";
 import { getImageCollection } from "../repo";
 
 app.get("/images/:id", (req: Request<{ id: string }>, res) => {
