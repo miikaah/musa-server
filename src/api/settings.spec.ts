@@ -2,7 +2,10 @@ import supertest from "supertest";
 import { Fs } from "../musa-core-import";
 
 import { app } from "../";
-import { settingsFixture, settingsPayloadFixture } from "../../test-utils/settings.fixture";
+import {
+  settingsFixture,
+  settingsPayloadFixture,
+} from "../../test-utils/settings.fixture";
 
 jest.mock("../musa-core-import");
 jest.mocked(Fs.getState).mockResolvedValue(settingsFixture);

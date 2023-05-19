@@ -1,5 +1,5 @@
 import { Server } from "http";
-import { errorHandler } from "./error-handler";
+import { errorHandler } from "./errorHandler";
 import { app } from "./express";
 import { Db, Scanner } from "./musa-core-import";
 import { setImageCollection } from "./repo";
@@ -11,6 +11,7 @@ export * from "./api/file";
 export * from "./api/find";
 export * from "./api/genre";
 export * from "./api/image";
+export * from "./api/playlist";
 export * from "./api/settings";
 export * from "./api/static";
 export * from "./api/theme";

@@ -14,19 +14,22 @@ app.get("/themes/:id", async (req: Request<{ id: string }>, res) => {
   try {
     theme = await Api.getTheme(id);
   } catch (error) {
-    res.status(200).json({ status: "Not Found" });
+    res.status(404).json({ error: "Not Found" });
     return;
   }
 
   res.status(200).json(theme);
 });
 
-app.put("/themes/:id", async (req: Request<{ id: string }, unknown, { colors: unknown }>, res) => {
-  const { id } = req.params;
-  const { colors } = req.body;
+app.put(
+  "/themes/:id",
+  async (req: Request<{ id: string }, unknown, { colors: unknown }>, res) => {
+    const { id } = req.params;
+    const { colors } = req.body;
 
-  res.status(201).json(await Api.insertTheme(id, colors));
-});
+    res.status(201).json(await Api.insertTheme(id, colors));
+  }
+);
 
 app.patch(
   "/themes/:id",

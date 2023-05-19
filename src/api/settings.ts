@@ -29,16 +29,19 @@ app.get("/app-settings", async (req, res) => {
   });
 });
 
-app.put("/app-settings", async (req: Request<unknown, unknown, { settings: State }>, res) => {
-  const ip = req.ip.split(":").pop() ?? "";
-  const currentProfile = await Tailscale.getCurrentProfileByIp(ip);
-  const stateFile = getStateFilename(currentProfile);
-  const { settings } = req.body;
+app.put(
+  "/app-settings",
+  async (req: Request<unknown, unknown, { settings: State }>, res) => {
+    const ip = req.ip.split(":").pop() ?? "";
+    const currentProfile = await Tailscale.getCurrentProfileByIp(ip);
+    const stateFile = getStateFilename(currentProfile);
+    const { settings } = req.body;
 
-  await Fs.setState(stateFile, settings);
+    await Fs.setState(stateFile, settings);
 
-  res.status(200).json({
-    ...settings,
-    currentProfile,
-  });
-});
+    res.status(200).json({
+      ...settings,
+      currentProfile,
+    });
+  }
+);

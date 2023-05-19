@@ -1,7 +1,7 @@
 import { Db, Scanner } from "@miikaah/musa-core";
 
 import { start } from ".";
-import { errorHandler } from "./error-handler";
+import { errorHandler } from "./errorHandler";
 import { app } from "./express";
 
 jest.mock("@miikaah/musa-core");
