@@ -8,7 +8,7 @@
     "dev": "env-cmd -f .env.dev nodemon --watch ./src --ext ts --exec ts-node --transpile-only src/index.ts",
     "start": "env-cmd -f .env node dist/index.js",
     "build": "shx rm dist/index.js && npm run build:backend",
-    "build:backend": "esbuild src/index.ts --bundle --platform=node --target=node16 --outdir=dist",
+    "build:backend": "esbuild src/index.ts --bundle --platform=node --target=node20 --outdir=dist",
     "tsc:w": "tsc --watch --noEmit",
     "test": "jest --coverage",
     "test:w": "jest --watch",
@@ -20,7 +20,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@miikaah/musa-core": "9.1.0",
+    "@miikaah/musa-core": "9.2.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
