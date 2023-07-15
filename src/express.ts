@@ -9,7 +9,10 @@ export const app = express();
 const { NODE_ENV = "" } = process.env;
 const env = NODE_ENV === "production" ? ".env" : ".env.dev";
 
-console.log("\nUsing env file", env);
+if (NODE_ENV !== "test") {
+  console.log("\nUsing env file", env);
+}
+
 dotenv.config({ path: path.resolve(process.cwd(), env) });
 
 app.use(express.json());

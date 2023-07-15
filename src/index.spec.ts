@@ -7,7 +7,7 @@ import { app } from "./express";
 jest.mock("@miikaah/musa-core");
 jest.mocked(Scanner.init).mockResolvedValue(<any>{});
 
-jest.mock("./api");
+jest.mock("./express");
 
 describe("Index tests", () => {
   process.env.FORCE_SERVER_START = "yes";

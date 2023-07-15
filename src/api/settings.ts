@@ -43,5 +43,5 @@ app.put(
       ...settings,
       currentProfile,
     });
-  }
+  },
 );

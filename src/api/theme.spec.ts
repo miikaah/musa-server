@@ -30,13 +30,13 @@ describe("Theme API tests", () => {
       expect(Api.getTheme).toHaveBeenCalledWith(id);
     });
 
-    it("should return 500 if getTheme throws an error", async () => {
+    it("should return 404 if getTheme throws an error", async () => {
       jest.mocked(Api.getTheme).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.get(route);
 
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({ message: "Internal Server Error" });
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({ message: "Not Found" });
       expect(Api.getTheme).toHaveBeenCalledTimes(1);
       expect(Api.getTheme).toHaveBeenCalledWith(id);
     });

@@ -33,5 +33,5 @@ app.post(
     res
       .status(201)
       .json(await Api.insertPlaylist({ pathIds, createdByUserId: currentProfile }));
-  }
+  },
 );

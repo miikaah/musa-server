@@ -14,7 +14,7 @@ app.get("/themes/:id", async (req: Request<{ id: string }>, res) => {
   try {
     theme = await Api.getTheme(id);
   } catch (error) {
-    res.status(404).json({ error: "Not Found" });
+    res.status(404).json({ message: "Not Found" });
     return;
   }
 
@@ -28,7 +28,7 @@ app.put(
     const { colors } = req.body;
 
     res.status(201).json(await Api.insertTheme(id, colors));
-  }
+  },
 );
 
 app.patch(
@@ -38,7 +38,7 @@ app.patch(
     const { colors } = req.body;
 
     res.status(200).json(await Api.updateTheme(id, colors));
-  }
+  },
 );
 
 app.delete("/themes/:id", async (req: Request<{ id: string }>, res) => {
