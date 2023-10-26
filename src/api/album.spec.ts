@@ -4,16 +4,12 @@ import { Api } from "../musa-core-import";
 import { app } from "../";
 import { albumFixture } from "../../test-utils/album.fixture";
 
-jest.mock("../musa-core-import");
-jest.mocked(Api.getAlbumById).mockResolvedValue(albumFixture);
+vi.mock("../musa-core-import");
+vi.mocked(Api.getAlbumById).mockResolvedValue(albumFixture);
 
 const request = supertest(app);
 
 describe("Album API tests", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe("GET /albums/:id", () => {
     const id = "foo";
     const route = `/albums/${id}`;
@@ -28,7 +24,7 @@ describe("Album API tests", () => {
     });
 
     it("should return 200 and an empty object if album doesn't exist", async () => {
-      jest.mocked(Api.getAlbumById).mockResolvedValueOnce(<any>{});
+      vi.mocked(Api.getAlbumById).mockResolvedValueOnce(<any>{});
 
       const response = await request.get(route);
 
@@ -39,7 +35,7 @@ describe("Album API tests", () => {
     });
 
     it("should return 500 if getAlbumById throws an error", async () => {
-      jest.mocked(Api.getAlbumById).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.getAlbumById).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.get(route);
 

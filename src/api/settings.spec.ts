@@ -7,17 +7,13 @@ import {
   settingsPayloadFixture,
 } from "../../test-utils/settings.fixture";
 
-jest.mock("../musa-core-import");
-jest.mocked(Fs.getState).mockResolvedValue(settingsFixture);
+vi.mock("../musa-core-import");
+vi.mocked(Fs.getState).mockResolvedValue(settingsFixture);
 
 const request = supertest(app);
 
 describe("Settings API tests", () => {
   const route = `/app-settings`;
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   describe(`GET ${route}`, () => {
     it("should return 200 and the settings", async () => {
@@ -30,7 +26,7 @@ describe("Settings API tests", () => {
     });
 
     it("should return 404 if the settings file doesn't exist", async () => {
-      jest.mocked(Fs.getState).mockResolvedValueOnce(undefined);
+      vi.mocked(Fs.getState).mockResolvedValueOnce(undefined);
 
       const response = await request.get(route);
 
@@ -41,7 +37,7 @@ describe("Settings API tests", () => {
     });
 
     it("should return 500 if Fs.getState throws an error", async () => {
-      jest.mocked(Fs.getState).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Fs.getState).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.get(route);
 
@@ -63,7 +59,7 @@ describe("Settings API tests", () => {
     });
 
     it("should return 500 if Fs.setState throws an error", async () => {
-      jest.mocked(Fs.setState).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Fs.setState).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.put(route).send(settingsPayloadFixture);
 

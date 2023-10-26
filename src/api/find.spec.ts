@@ -4,17 +4,13 @@ import { Api } from "../musa-core-import";
 import { app } from "../";
 import { emptyFindResultFixture, findQueryFixture } from "../../test-utils/find.fixture";
 
-jest.mock("../musa-core-import");
-jest.mocked(Api.find).mockResolvedValue(findQueryFixture);
-jest.mocked(Api.findRandom).mockResolvedValue(findQueryFixture);
+vi.mock("../musa-core-import");
+vi.mocked(Api.find).mockResolvedValue(findQueryFixture);
+vi.mocked(Api.findRandom).mockResolvedValue(findQueryFixture);
 
 const request = supertest(app);
 
 describe("Find API tests", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe("GET /find/:query", () => {
     const query = "foo";
     const limit = 32;
@@ -30,7 +26,7 @@ describe("Find API tests", () => {
     });
 
     it("should return 200 and a default empty result set", async () => {
-      jest.mocked(Api.find).mockResolvedValueOnce(<any>emptyFindResultFixture);
+      vi.mocked(Api.find).mockResolvedValueOnce(<any>emptyFindResultFixture);
 
       const response = await request.get(route);
 
@@ -41,7 +37,7 @@ describe("Find API tests", () => {
     });
 
     it("should return 500 if find throws an error", async () => {
-      jest.mocked(Api.find).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.find).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.get(route);
 
@@ -64,7 +60,7 @@ describe("Find API tests", () => {
     });
 
     it("should return 500 if findRandom throws an error", async () => {
-      jest.mocked(Api.findRandom).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.findRandom).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.get(route);
 

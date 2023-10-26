@@ -14,7 +14,7 @@ app.get("/files/:name", (req: Request<{ name: string }>, res, next) => {
   const filename = UrlSafeBase64.decode(name);
 
   res.sendFile(filename, options, (err) => {
-    if (err?.message === "Not Found") {
+    if (err?.message.includes("ENOENT")) {
       res.status(404).json({ message: "Not Found" });
     } else if (err) {
       next(err);

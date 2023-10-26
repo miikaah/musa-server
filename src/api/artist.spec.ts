@@ -8,18 +8,14 @@ import {
   artistsFixture,
 } from "../../test-utils/artist.fixture";
 
-jest.mock("../musa-core-import");
-jest.mocked(Api.getArtistById).mockResolvedValue(artistFixture);
-jest.mocked(Api.getArtists).mockResolvedValue(artistsFixture);
-jest.mocked(Api.getArtistAlbums).mockResolvedValue(artistAlbumsFixture);
+vi.mock("../musa-core-import");
+vi.mocked(Api.getArtistById).mockResolvedValue(artistFixture);
+vi.mocked(Api.getArtists).mockResolvedValue(artistsFixture);
+vi.mocked(Api.getArtistAlbums).mockResolvedValue(artistAlbumsFixture);
 
 const request = supertest(app);
 
 describe("Artist API tests", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe("GET /artists/:id", () => {
     const id = "foo";
     const route = `/artists/${id}`;
@@ -33,7 +29,7 @@ describe("Artist API tests", () => {
     });
 
     it("should return 200 and an empty object if artist doesn't exist", async () => {
-      jest.mocked(Api.getArtistById).mockResolvedValueOnce(<any>{});
+      vi.mocked(Api.getArtistById).mockResolvedValueOnce(<any>{});
 
       const response = await request.get(route);
 
@@ -44,7 +40,7 @@ describe("Artist API tests", () => {
     });
 
     it("should return 500 if getArtistById throws an error", async () => {
-      jest.mocked(Api.getArtistById).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.getArtistById).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.get(route);
 
@@ -67,7 +63,7 @@ describe("Artist API tests", () => {
     });
 
     it("should return 500 if getArtists throws an error", async () => {
-      jest.mocked(Api.getArtists).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.getArtists).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.get(route);
 
@@ -89,7 +85,7 @@ describe("Artist API tests", () => {
     });
 
     it("should return 500 if getArtistAlbums throws an error", async () => {
-      jest.mocked(Api.getArtistAlbums).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.getArtistAlbums).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.get(route);
 

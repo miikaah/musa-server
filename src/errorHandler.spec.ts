@@ -1,7 +1,7 @@
 import { ResponseMock } from "../test-utils/response.mock";
 import { errorHandler } from "./errorHandler";
 
-const nextMock = jest.fn();
+const nextMock = vi.fn();
 
 const origConsoleErrorFn = console.error;
 
@@ -16,7 +16,6 @@ describe("Error handler tests", () => {
 
   beforeEach(() => {
     process.env.NODE_ENV = "test";
-    jest.clearAllMocks();
   });
 
   it("should call next when response has already been sent", () => {

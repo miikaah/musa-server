@@ -4,19 +4,15 @@ import { Api } from "../musa-core-import";
 import { app } from "../";
 import { themeFixture, themePayloadFixture } from "../../test-utils/theme.fixture";
 
-jest.mock("../musa-core-import");
-jest.mocked(Api.getTheme).mockResolvedValue(themeFixture);
-jest.mocked(Api.insertTheme).mockResolvedValue(themeFixture);
-jest.mocked(Api.updateTheme).mockResolvedValue(themeFixture);
-jest.mocked(Api.getAllThemes).mockResolvedValue([themeFixture]);
+vi.mock("../musa-core-import");
+vi.mocked(Api.getTheme).mockResolvedValue(themeFixture);
+vi.mocked(Api.insertTheme).mockResolvedValue(themeFixture);
+vi.mocked(Api.updateTheme).mockResolvedValue(themeFixture);
+vi.mocked(Api.getAllThemes).mockResolvedValue([themeFixture]);
 
 const request = supertest(app);
 
 describe("Theme API tests", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe("GET /themes/:id", () => {
     const id = "foo";
     const route = `/themes/${id}`;
@@ -31,7 +27,7 @@ describe("Theme API tests", () => {
     });
 
     it("should return 404 if getTheme throws an error", async () => {
-      jest.mocked(Api.getTheme).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.getTheme).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.get(route);
 
@@ -54,7 +50,7 @@ describe("Theme API tests", () => {
     });
 
     it("should return 500 if getAllThemes throws an error", async () => {
-      jest.mocked(Api.getAllThemes).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.getAllThemes).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.get(route);
 
@@ -78,7 +74,7 @@ describe("Theme API tests", () => {
     });
 
     it("should return 500 if insertTheme throws an error", async () => {
-      jest.mocked(Api.insertTheme).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.insertTheme).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.put(route).send(themePayloadFixture);
 
@@ -103,7 +99,7 @@ describe("Theme API tests", () => {
     });
 
     it("should return 500 if updateTheme throws an error", async () => {
-      jest.mocked(Api.updateTheme).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.updateTheme).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.patch(route).send(themePayloadFixture);
 
@@ -128,7 +124,7 @@ describe("Theme API tests", () => {
     });
 
     it("should return 500 if removeTheme throws an error", async () => {
-      jest.mocked(Api.removeTheme).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.removeTheme).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.delete(route);
 

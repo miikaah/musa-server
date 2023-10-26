@@ -4,16 +4,12 @@ import { Api } from "../musa-core-import";
 import { app } from "../";
 import { audioFixture } from "../../test-utils/audio.fixture";
 
-jest.mock("../musa-core-import");
-jest.mocked(Api.getAudioById).mockResolvedValue(audioFixture);
+vi.mock("../musa-core-import");
+vi.mocked(Api.getAudioById).mockResolvedValue(audioFixture);
 
 const request = supertest(app);
 
 describe("Audio API tests", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe("GET /audios/:id", () => {
     const id = "foo";
     const route = `/audios/${id}`;
@@ -28,7 +24,7 @@ describe("Audio API tests", () => {
     });
 
     it("should return 200 and an empty object if audio doesn't exist", async () => {
-      jest.mocked(Api.getAudioById).mockResolvedValueOnce(<any>{});
+      vi.mocked(Api.getAudioById).mockResolvedValueOnce(<any>{});
 
       const response = await request.get(route);
 
@@ -39,7 +35,7 @@ describe("Audio API tests", () => {
     });
 
     it("should return 500 if getAudioById throws an error", async () => {
-      jest.mocked(Api.getAudioById).mockRejectedValueOnce(new Error("err"));
+      vi.mocked(Api.getAudioById).mockRejectedValueOnce(new Error("err"));
 
       const response = await request.get(route);
 
