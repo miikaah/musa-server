@@ -18,5 +18,3 @@ dotenv.config({ path: path.resolve(process.cwd(), env) });
 app.use(express.json());
 app.use(cors({ origin: "*" }));
 app.use(compression());
-
-app.set("trust proxy", true);
