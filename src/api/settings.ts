@@ -13,7 +13,8 @@ const getStateFilename = (currentProfile?: string) => {
 };
 
 app.get("/app-settings", async (req, res) => {
-  const ip = req.ip ? req.ip.split(":").pop() ?? "" : "";
+  const isMusaProxy = Boolean(req.headers["x-musa-proxy"]);
+  const ip = req.ip && !isMusaProxy ? req.ip.split(":").pop() ?? "" : "";
   const currentProfile = await Tailscale.getCurrentProfileByIp(ip);
   const stateFile = getStateFilename(currentProfile);
   const settings = await Fs.getState(stateFile);
@@ -32,7 +33,8 @@ app.get("/app-settings", async (req, res) => {
 app.put(
   "/app-settings",
   async (req: Request<unknown, unknown, { settings: State }>, res) => {
-    const ip = req.ip ? req.ip.split(":").pop() ?? "" : "";
+    const isMusaProxy = Boolean(req.headers["x-musa-proxy"]);
+    const ip = req.ip && !isMusaProxy ? req.ip.split(":").pop() ?? "" : "";
     const currentProfile = await Tailscale.getCurrentProfileByIp(ip);
     const stateFile = getStateFilename(currentProfile);
     const { settings } = req.body;
