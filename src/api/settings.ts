@@ -8,7 +8,7 @@ const isDev = NODE_ENV === "local";
 
 const getStateFilename = (currentProfile?: string) => {
   return `${isDev ? ".dev" : ""}.musa-server.state.v1${
-    currentProfile ? `.user-${currentProfile}` : ""
+    currentProfile ? `.${currentProfile}` : ""
   }.json`;
 };
 
