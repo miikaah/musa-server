@@ -12,10 +12,17 @@ const getStateFilename = (currentProfile?: string) => {
   }.json`;
 };
 
+const getCurrentProfile = async (
+  req: Request<unknown, unknown, unknown>,
+): Promise<string> => {
+  const musaProxyUsername = String(req.headers["x-musa-proxy-username"]);
+  const ip = req.ip && !musaProxyUsername ? req.ip.split(":").pop() ?? "" : "";
+
+  return musaProxyUsername ?? Tailscale.getCurrentProfileByIp(ip);
+};
+
 app.get("/app-settings", async (req, res) => {
-  const isMusaProxy = Boolean(req.headers["x-musa-proxy"]);
-  const ip = req.ip && !isMusaProxy ? req.ip.split(":").pop() ?? "" : "";
-  const currentProfile = await Tailscale.getCurrentProfileByIp(ip);
+  const currentProfile = await getCurrentProfile(req);
   const stateFile = getStateFilename(currentProfile);
   const settings = await Fs.getState(stateFile);
 
@@ -33,9 +40,7 @@ app.get("/app-settings", async (req, res) => {
 app.put(
   "/app-settings",
   async (req: Request<unknown, unknown, { settings: State }>, res) => {
-    const isMusaProxy = Boolean(req.headers["x-musa-proxy"]);
-    const ip = req.ip && !isMusaProxy ? req.ip.split(":").pop() ?? "" : "";
-    const currentProfile = await Tailscale.getCurrentProfileByIp(ip);
+    const currentProfile = await getCurrentProfile(req);
     const stateFile = getStateFilename(currentProfile);
     const { settings } = req.body;
 
