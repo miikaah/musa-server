@@ -15,10 +15,11 @@ const getStateFilename = (currentProfile?: string) => {
 const getCurrentProfile = async (
   req: Request<unknown, unknown, unknown>,
 ): Promise<string> => {
-  const musaProxyUsername = String(req.headers["x-musa-proxy-username"]);
-  const ip = req.ip && !musaProxyUsername ? req.ip.split(":").pop() ?? "" : "";
+  const musaProxyUsername = req.headers["x-musa-proxy-username"] as string;
 
-  return musaProxyUsername ?? Tailscale.getCurrentProfileByIp(ip);
+  return (
+    musaProxyUsername ?? Tailscale.getCurrentProfileByIp(req.ip.split(":").pop() ?? "")
+  );
 };
 
 app.get("/app-settings", async (req, res) => {
