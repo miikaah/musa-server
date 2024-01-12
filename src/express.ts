@@ -46,7 +46,7 @@ app.use((req, res, next) => {
 
   setTimeout(() => {
     console.log(`Request ${id} ended by force`);
-    res.end();
+    res.send();
   }, 25_000);
 
   next();
