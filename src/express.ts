@@ -57,5 +57,5 @@ function getId(): string {
   const md5Hash = crypto.createHash('md5');
   md5Hash.update(hexHash);
 
-  return md5Hash.digest('hex');
+  return md5Hash.digest('hex').substring(0, 9);
 }
