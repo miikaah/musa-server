@@ -26,6 +26,7 @@ app.use((req, res, next) => {
 
   req.addListener('error', (err) => {
     console.error(`Request ${id} errored ${req.originalUrl}`);
+    console.error(req);
     // @ts-ignore
     if (err.code === "EPIPE" || err.code === "ECONNABORTED") {
       console.error(req.headers);
