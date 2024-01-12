@@ -22,16 +22,12 @@ app.use(compression());
 
 app.use((req, res, next) => {
   const id = getId();
-  console.log(`Request ${id} ${req.method} ${req.statusCode ?? ""}`);
+  console.log(`Request ${id} ${req.method} ${req.originalUrl}`);
 
   if (req.headers['range']) {
-    req.addListener('error', (err) => {
+    req.addListener('error', () => {
       console.error(`Request ${id} errored ${req.originalUrl}`);
-      console.error(err);
-      console.error(req.headers);
-      console.error('req.complete', req.complete);
-      console.error('res.writableEnded', res.writableEnded);
-      console.error('res.statusCode', res.statusCode, res.statusMessage);
+      console.error(`Request ${id}`, req.headers.range);
     });
   }
 
