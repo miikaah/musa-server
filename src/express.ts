@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import path from "path";
+import crypto from "crypto"
 
 export const app = express();
 
@@ -19,17 +20,42 @@ app.use(express.json());
 app.use(cors({ origin: "*" }));
 app.use(compression());
 
-// Middleware to log the number of connections
 app.use((req, res, next) => {
-  // Log the connection information
-  console.log(`Number of connections: ${app.locals.connections || 0}`);
+  const id = getId();
+  console.log(`Request ${id} ${req.method} ${req.statusCode ?? ""}`);
 
-  // Increment the connection count
-  app.locals.connections = (app.locals.connections || 0) + 1;
+  req.addListener('error', (err) => {
+    console.error(`Request ${id} errored ${req.originalUrl}`);
+    // @ts-ignore
+    if (err.code === "EPIPE" || err.code === "ECONNABORTED") {
+      console.error(req.headers);
+      console.error(req.body);
+    }
+  });
 
-  // Handle the request
+  req.addListener('end', () => {
+    console.error(`Request ${id} ended ${req.originalUrl}`);
+  });
+
+  req.addListener('close', () => {
+    console.error(`Request ${id} closed ${req.originalUrl}`);
+  });
+
+  res.setTimeout(60_000 * 2, () => {
+    console.log(`Request ${id} timed out ${req.originalUrl}`);
+  });
+
   next();
-
-  // Decrement the connection count after the response is sent
-  app.locals.connections -= 1;
 });
+
+function getId(): string {
+  const randomBuffer = crypto.randomBytes(16);
+  const sha256Hash = crypto.createHash('sha256');
+  sha256Hash.update(randomBuffer);
+
+  const hexHash = sha256Hash.digest('hex');
+  const md5Hash = crypto.createHash('md5');
+  md5Hash.update(hexHash);
+
+  return md5Hash.digest('hex');
+}
