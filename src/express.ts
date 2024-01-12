@@ -24,15 +24,16 @@ app.use((req, res, next) => {
   const id = getId();
   console.log(`Request ${id} ${req.method} ${req.statusCode ?? ""}`);
 
-  req.addListener('error', (err) => {
-    console.error(`Request ${id} errored ${req.originalUrl}`);
-    console.error(req);
-    // @ts-ignore
-    if (err.code === "EPIPE" || err.code === "ECONNABORTED") {
+  if (req.headers['range']) {
+    req.addListener('error', (err) => {
+      console.error(`Request ${id} errored ${req.originalUrl}`);
+      console.error(err);
       console.error(req.headers);
-      console.error(req.body);
-    }
-  });
+      console.error('req.complete', req.complete);
+      console.error('res.writableEnded', res.writableEnded);
+      console.error('res.statusCode', res.statusCode, res.statusMessage);
+    });
+  }
 
   req.addListener('end', () => {
     console.error(`Request ${id} ended ${req.originalUrl}`);
@@ -42,7 +43,7 @@ app.use((req, res, next) => {
     console.error(`Request ${id} closed ${req.originalUrl}`);
   });
 
-  res.setTimeout(60_000 * 2, () => {
+  res.setTimeout(60_000, () => {
     console.log(`Request ${id} timed out ${req.originalUrl}`);
   });
 
