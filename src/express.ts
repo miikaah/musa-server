@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import path from "path";
-import crypto from "crypto"
+import crypto from "crypto";
 
 export const app = express();
 
@@ -25,17 +25,17 @@ app.use((req, res, next) => {
   console.log(`Request ${id} ${req.method} ${req.originalUrl}`);
 
   // It's useful to see the range being requested for partial content
-  if (req.headers['range']) {
+  if (req.headers["range"]) {
     console.log(`Request ${id}`, req.headers.range);
   }
 
   // End is called if the request is successful, otherwise error is emitted
-  req.addListener('end', () => {
+  req.addListener("end", () => {
     console.log(`Request ${id} ended ${req.originalUrl}`);
   });
 
   // Close should always be called
-  req.addListener('close', () => {
+  req.addListener("close", () => {
     console.log(`Request ${id} closed ${res.statusCode} ${req.originalUrl}`);
   });
 
@@ -49,12 +49,12 @@ app.use((req, res, next) => {
 
 function getId(): string {
   const randomBuffer = crypto.randomBytes(16);
-  const sha256Hash = crypto.createHash('sha256');
+  const sha256Hash = crypto.createHash("sha256");
   sha256Hash.update(randomBuffer);
 
-  const hexHash = sha256Hash.digest('hex');
-  const md5Hash = crypto.createHash('md5');
+  const hexHash = sha256Hash.digest("hex");
+  const md5Hash = crypto.createHash("md5");
   md5Hash.update(hexHash);
 
-  return md5Hash.digest('hex').substring(0, 9);
+  return md5Hash.digest("hex").substring(0, 9);
 }
