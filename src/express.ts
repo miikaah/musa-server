@@ -24,21 +24,22 @@ app.use((req, res, next) => {
   const id = getId();
   console.log(`Request ${id} ${req.method} ${req.originalUrl}`);
 
+  // It's useful to see the range being requested for partial content
   if (req.headers['range']) {
-    req.addListener('error', () => {
-      console.error(`Request ${id} errored ${req.originalUrl}`);
-      console.error(`Request ${id}`, req.headers.range);
-    });
+    console.log(`Request ${id}`, req.headers.range);
   }
 
+  // End is called if the request is successful, otherwise error is emitted
   req.addListener('end', () => {
-    console.error(`Request ${id} ended ${req.originalUrl}`);
+    console.log(`Request ${id} ended ${req.originalUrl}`);
   });
 
+  // Close should always be called
   req.addListener('close', () => {
-    console.error(`Request ${id} closed ${req.originalUrl}`);
+    console.log(`Request ${id} closed ${res.statusCode} ${req.originalUrl}`);
   });
 
+  // Express default timeout is 5 minutes
   res.setTimeout(60_000, () => {
     console.log(`Request ${id} timed out ${req.originalUrl}`);
   });
