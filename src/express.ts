@@ -44,11 +44,6 @@ app.use((req, res, next) => {
     console.log(`Request ${id} timed out ${req.originalUrl}`);
   });
 
-  setTimeout(() => {
-    console.log(`Request ${id} ended by force`);
-    res.send();
-  }, 25_000);
-
   next();
 });
 
