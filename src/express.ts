@@ -40,7 +40,7 @@ app.use((req, res, next) => {
   });
 
   // Express default timeout is 5 minutes
-  res.setTimeout(60_000, () => {
+  res.setTimeout(30_000, () => {
     console.log(`Request ${id} timed out ${req.originalUrl}`);
   });
 
