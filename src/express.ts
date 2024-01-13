@@ -27,12 +27,6 @@ app.use((req, res, next) => {
   // It's useful to see the range being requested for partial content
   if (req.headers["range"]) {
     console.log(`Request ${id}`, req.headers.range);
-
-    // Close should always be called
-    res.addListener("close", () => {
-      console.log(`Request ${id} getting nuked ${res.statusCode} ${req.originalUrl}`);
-      req.destroy();
-    });
   }
 
   // Close should always be called
@@ -48,6 +42,7 @@ app.use((req, res, next) => {
   // Express default timeout is 5 minutes
   res.setTimeout(10_000, () => {
     console.log(`Request ${id} timed out ${req.originalUrl}`);
+    req.destroy();
     res.status(408).end();
   });
 
