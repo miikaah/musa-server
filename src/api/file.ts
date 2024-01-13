@@ -22,7 +22,6 @@ app.get(
       if (err?.message.includes("ENOENT")) {
         res.status(404).json({ message: "Not Found" });
       } else if (err) {
-        console.error("sendFile", err);
         next(err);
       }
     });

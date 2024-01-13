@@ -29,11 +29,6 @@ app.use((req, res, next) => {
     console.log(`Request ${id}`, req.headers.range);
   }
 
-  // End is called if the request is successful, otherwise error is emitted
-  req.addListener("end", () => {
-    console.log(`Request ${id} ended ${req.originalUrl}`);
-  });
-
   // Close should always be called
   req.addListener("close", () => {
     console.log(`Request ${id} closed ${res.statusCode} ${req.originalUrl}`);
