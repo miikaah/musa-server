@@ -34,14 +34,14 @@ app.use((req, res, next) => {
     console.log(`Request ${id} closed ${res.statusCode} ${req.originalUrl}`);
   });
 
-  // Close should always be called
-  res.addListener("close", () => {
-    console.log(`Response ${id} closed ${res.statusCode} ${req.originalUrl}`);
-  });
+  // res.addListener("close", () => {
+  //   console.log(`Response ${id} closed ${res.statusCode} ${req.originalUrl}`);
+  // });
 
   // Express default timeout is 5 minutes
   res.setTimeout(10_000, () => {
     console.log(`Request ${id} timed out ${req.originalUrl}`);
+    // NOTE: Nuking the request here closes everything correctly
     req.destroy();
     res.status(408).end();
   });
