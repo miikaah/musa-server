@@ -7,13 +7,21 @@ export const errorHandler = (
   next: NextFunction,
 ) => {
   if (process.env.NODE_ENV !== "test") {
-    // Ignore 206 Partial Content erroring because it always happens
-    if (!(req.headers['range'] && res.statusCode === 206)) {
-      console.error('Caught:', err);
+    if (!(req.headers["range"] && res.statusCode === 206)) {
+      console.error("Caught:", err);
+    } else {
+      console.error(
+        `Request ${req.headers["x-musa-proxy-request-id"] ?? ""} errored ${err.message}`,
+      );
     }
   }
 
   if (res.headersSent) {
+    console.log(
+      `Request ${req.headers["x-musa-proxy-request-id"] ?? ""} isHeadersSent ${
+        res.headersSent
+      }`,
+    );
     return next();
   }
 

@@ -21,7 +21,7 @@ app.use(cors({ origin: "*" }));
 app.use(compression());
 
 app.use((req, res, next) => {
-  const id = getId();
+  const id = req.headers["x-musa-proxy-request-id"] ?? getId();
   console.log(`Request ${id} ${req.method} ${req.originalUrl}`);
 
   // It's useful to see the range being requested for partial content
@@ -43,11 +43,6 @@ app.use((req, res, next) => {
   res.setTimeout(30_000, () => {
     console.log(`Request ${id} timed out ${req.originalUrl}`);
   });
-
-  setTimeout(() => {
-    console.log(`Request ${id} ended by force`);
-    res.end();
-  }, 25_000);
 
   next();
 });
