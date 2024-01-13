@@ -19,10 +19,10 @@ app.get(
     const filename = UrlSafeBase64.decode(name);
 
     res.sendFile(filename, options, (err) => {
-      console.log("sendFile", err);
       if (err?.message.includes("ENOENT")) {
         res.status(404).json({ message: "Not Found" });
       } else if (err) {
+        console.error("sendFile", err);
         next(err);
       }
     });
