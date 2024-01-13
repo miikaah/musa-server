@@ -6,22 +6,14 @@ export const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
+  const id = req.headers["x-musa-proxy-request-id"] ?? "";
+
   if (process.env.NODE_ENV !== "test") {
-    if (!(req.headers["range"] && res.statusCode === 206)) {
-      console.error("Caught:", err);
-    } else {
-      console.error(
-        `Request ${req.headers["x-musa-proxy-request-id"] ?? ""} errored ${err.message}`,
-      );
-    }
+    console.error(`Request ${id} errored ${err.message}`);
   }
 
   if (res.headersSent) {
-    console.log(
-      `Request ${req.headers["x-musa-proxy-request-id"] ?? ""} isHeadersSent ${
-        res.headersSent
-      }`,
-    );
+    console.log(`Request ${id} isHeadersSent ${res.headersSent}`);
     return next();
   }
 
