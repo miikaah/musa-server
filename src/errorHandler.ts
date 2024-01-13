@@ -9,9 +9,11 @@ export const errorHandler = (
   const id = req.headers["x-musa-proxy-request-id"] ?? "";
 
   if (process.env.NODE_ENV !== "test") {
-    console.error(
-      `Request ${id} errored ${err.message} isHeadersSent ${res.headersSent}`,
-    );
+    if (res.statusCode !== 408) {
+      console.error(
+        `Request ${id} errored ${err.message} isHeadersSent ${res.headersSent}`,
+      );
+    }
   }
 
   if (res.headersSent) {

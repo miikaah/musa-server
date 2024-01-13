@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 
   // Express default timeout is 5 minutes
   res.setTimeout(10_000, () => {
-    console.log(`Request ${id} timed out ${req.originalUrl}`);
+    // console.log(`Request ${id} timed out ${req.originalUrl}`);
     // NOTE: Nuking the request here closes everything correctly
     req.destroy();
     res.status(408).end();
