@@ -27,6 +27,12 @@ app.use((req, res, next) => {
   // It's useful to see the range being requested for partial content
   if (req.headers["range"]) {
     console.log(`Request ${id}`, req.headers.range);
+
+    // Close should always be called
+    res.addListener("close", () => {
+      console.log(`Response ${id} closed ${res.statusCode} ${req.originalUrl}`);
+      req.destroy();
+    });
   }
 
   // Close should always be called
