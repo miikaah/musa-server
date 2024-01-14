@@ -40,7 +40,7 @@ app.use((req, res, next) => {
   //   console.log(`Response ${id} closed ${res.statusCode} ${req.originalUrl}`);
   // });
 
-  console.log("Connection", req.headers['connection'])
+  console.log("connection", req.headers['connection'])
   if (req.headers['connection'] !== "keep-alive") {
     // Express default timeout is 5 minutes
     res.setTimeout(10_000, () => {
