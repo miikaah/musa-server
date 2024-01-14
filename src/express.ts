@@ -15,6 +15,7 @@ if (NODE_ENV !== "test") {
 }
 
 dotenv.config({ path: path.resolve(process.cwd(), env) });
+app.disable('x-powered-by');
 
 app.use(express.json());
 app.use(cors({ origin: "*" }));
@@ -23,6 +24,7 @@ app.use(compression());
 app.use((req, res, next) => {
   const id = req.headers["x-musa-proxy-request-id"] ?? getId();
   console.log(`Request ${id} ${req.method} ${req.originalUrl}`);
+  res.setHeader("X-Powered-By", 'Energia');
 
   // It's useful to see the range being requested for partial content
   if (req.headers["range"]) {
@@ -38,13 +40,16 @@ app.use((req, res, next) => {
   //   console.log(`Response ${id} closed ${res.statusCode} ${req.originalUrl}`);
   // });
 
-  // Express default timeout is 5 minutes
-  res.setTimeout(10_000, () => {
-    // console.log(`Request ${id} timed out ${req.originalUrl}`);
-    // NOTE: Nuking the request here closes everything correctly
-    req.destroy();
-    res.status(408).end();
-  });
+  console.log("Connection", req.headers['connection'])
+  if (req.headers['connection'] !== "keep-alive") {
+    // Express default timeout is 5 minutes
+    res.setTimeout(10_000, () => {
+      // console.log(`Request ${id} timed out ${req.originalUrl}`);
+      // NOTE: Nuking the request here closes everything correctly
+      req.destroy();
+      res.status(408).end();
+    });
+  }
 
   next();
 });
