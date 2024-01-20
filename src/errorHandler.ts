@@ -7,9 +7,13 @@ export const errorHandler = (
   next: NextFunction,
 ) => {
   const id = req.headers["x-musa-proxy-request-id"] ?? "";
+  const isRangeRequest = Boolean(req.headers['range']);
 
   if (process.env.NODE_ENV !== "test") {
-    if (res.statusCode !== 408) {
+    if (
+      !isRangeRequest ||
+      isRangeRequest && err.message !== 'Request aborted' && err.message !== 'write EPIPE'
+    ) {
       console.error(
         `Request ${id} errored ${err.message} isHeadersSent ${res.headersSent}`,
       );
