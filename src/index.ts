@@ -17,7 +17,7 @@ export * from "./api/static";
 export * from "./api/theme";
 export { app } from "./express";
 
-const { NODE_ENV, MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
+const { NODE_ENV = "", MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
 
 const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
 const musicLibraryPath = MUSA_SRC_PATH;

@@ -1,20 +1,20 @@
 import compression from "compression";
 import cors from "cors";
-import dotenv from "dotenv";
 import express from "express";
-import path from "path";
 import crypto from "crypto";
+import dotenv from "dotenv";
+import path from "path";
 
-export const app = express();
-
-const { NODE_ENV = "" } = process.env;
-const env = NODE_ENV === "production" ? ".env" : ".env.dev";
+const { ROOT_DIR = "", NODE_ENV = "" } = process.env;
+const env = ROOT_DIR ? path.resolve(ROOT_DIR, ".env") : path.resolve(process.cwd(), ".env.dev");
 
 if (NODE_ENV !== "test") {
   console.log("\nUsing env file", env);
 }
 
-dotenv.config({ path: path.resolve(process.cwd(), env) });
+dotenv.config({ path: env });
+
+export const app = express();
 
 app.use(express.json());
 app.use(cors({ origin: "*" }));
