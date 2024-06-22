@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { logger } from "./logger";
 
 export const errorHandler = (
   err: Error,
@@ -7,14 +8,16 @@ export const errorHandler = (
   next: NextFunction,
 ) => {
   const id = req.headers["x-musa-proxy-request-id"] ?? "";
-  const isRangeRequest = Boolean(req.headers['range']);
+  const isRangeRequest = Boolean(req.headers["range"]);
 
   if (process.env.NODE_ENV !== "test") {
     if (
       !isRangeRequest ||
-      isRangeRequest && err.message !== 'Request aborted' && err.message !== 'write EPIPE'
+      (isRangeRequest &&
+        err.message !== "Request aborted" &&
+        err.message !== "write EPIPE")
     ) {
-      console.error(
+      logger.error(
         `Request ${id} errored ${err.message} isHeadersSent ${res.headersSent}`,
       );
     }

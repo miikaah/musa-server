@@ -3,6 +3,7 @@ import { errorHandler } from "./errorHandler";
 import { app } from "./express";
 import { Db, Scanner } from "./musa-core-import";
 import { setImageCollection } from "./repo";
+import { logger } from "./logger";
 
 export * from "./api/album";
 export * from "./api/artist";
@@ -31,7 +32,7 @@ export const start = async () => {
     return;
   }
 
-  console.log(`\n${new Date().toISOString()}\n`);
+  logger.log(`\n${new Date().toISOString()}\n`);
   await Db.init(musicLibraryPath);
   const mediaCollection = await Scanner.init({
     musicLibraryPath,
@@ -47,7 +48,7 @@ export const start = async () => {
 
   server = app.listen(PORT, async () => {
     if (NODE_ENV !== "test") {
-      console.log(`Serving ${baseUrl}\n`);
+      logger.log(`Serving ${baseUrl}\n`);
     }
 
     Scanner.update({ musicLibraryPath });
@@ -57,12 +58,12 @@ export const start = async () => {
 start();
 
 process.on("SIGTERM", () => {
-  console.log("Received SIGTERM, shutting down gracefully...");
+  logger.log("Received SIGTERM, shutting down gracefully...");
 
   server.close(() => {
-    console.log("HTTP server closed");
+    logger.log("HTTP server closed");
   });
 
-  console.log("Shutting down process");
+  logger.log("Shutting down process");
   process.exit(0);
 });
