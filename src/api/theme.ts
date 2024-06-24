@@ -1,7 +1,7 @@
 import { Request } from "express";
 
 import { app } from "../express";
-import { Api } from "../musa-core-import";
+import { Api, Colors } from "../musa-core-import";
 
 app.get("/themes", async (_req, res) => {
   res.status(200).json(await Api.getAllThemes());
@@ -23,7 +23,7 @@ app.get("/themes/:id", async (req: Request<{ id: string }>, res) => {
 
 app.put(
   "/themes/:id",
-  async (req: Request<{ id: string }, unknown, { colors: unknown }>, res) => {
+  async (req: Request<{ id: string }, unknown, { colors: Colors }>, res) => {
     const { id } = req.params;
     const { colors } = req.body;
 
@@ -33,7 +33,7 @@ app.put(
 
 app.patch(
   "/themes/:id",
-  async (req: Request<{ id: string }, unknown, { colors: unknown }>, res) => {
+  async (req: Request<{ id: string }, unknown, { colors: Colors }>, res) => {
     const { id } = req.params;
     const { colors } = req.body;
 

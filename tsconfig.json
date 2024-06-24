@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
+    "lib": ["esnext"],
     "module": "commonjs",
-    "lib": ["esNext"],
-    "target": "es2020",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "target": "es2022",
+    "types": ["vitest/globals"],
     "esModuleInterop": true,
     "isolatedModules": true,
-    "moduleResolution": "node",
-    "strict": true,
+    "skipLibCheck": true,
     "sourceMap": true,
-    "outDir": "dist",
-    "types": ["vitest/globals"]
+    "strict": true
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["node_modules", "./src/jestSetup.ts"]
