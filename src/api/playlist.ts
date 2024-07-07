@@ -9,7 +9,7 @@ app.get("/playlists/:id", async (req: Request<{ id: string }>, res) => {
   let playlist;
   try {
     playlist = await Api.getPlaylist(id);
-  } catch (error) {
+  } catch {
     res.status(404).json({ error: "Not Found" });
     return;
   }

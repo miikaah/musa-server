@@ -13,7 +13,7 @@ app.get("/themes/:id", async (req: Request<{ id: string }>, res) => {
   let theme;
   try {
     theme = await Api.getTheme(id);
-  } catch (error) {
+  } catch {
     res.status(404).json({ message: "Not Found" });
     return;
   }
