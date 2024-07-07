@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const Service = require("node-windows").Service;
 
 const { BACKEND_BUILD_DIR } = process.env;

@@ -3,6 +3,7 @@ import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import globals from "globals";
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -16,6 +17,9 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
+      globals: {
+        ...globals.node,
+      },
     },
     rules: {
       "prettier/prettier": 1,
