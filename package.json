@@ -10,7 +10,7 @@
     "build:mac": "env-cmd -f .env sh scripts/build.mac.sh",
     "build:nux": "env-cmd -f .env sh scripts/build.mac.sh",
     "build:win": "env-cmd -f .env sh scripts/build.win.bat",
-    "build:backend": "esbuild src/index.ts --bundle --platform=node --target=node20 --outdir=dist",
+    "build:backend": "esbuild src/index.ts --bundle --platform=node --target=node22 --outdir=dist",
     "tsc:w": "tsc --watch --noEmit",
     "test": "vitest run --coverage",
     "test:w": "vitest",
