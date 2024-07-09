@@ -23,5 +23,6 @@ jobs:
       - run: npm ci
         env:
           MUSA_GITHUB_PAT: ${{ secrets.MUSA_GITHUB_PAT }}
+      - run: node_modules/.bin/tsc --noEmit
       - run: npm run test
       - run: npm run build:backend
