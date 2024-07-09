@@ -23,7 +23,7 @@ const { NODE_ENV = "", MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = proces
 const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
 const musicLibraryPath = MUSA_SRC_PATH;
 
-let server: Server;
+let server: Server | undefined;
 
 export const start = async () => {
   app.use(errorHandler);
@@ -60,7 +60,7 @@ start();
 process.on("SIGTERM", () => {
   logger.log("Received SIGTERM, shutting down gracefully...");
 
-  server.close(() => {
+  server?.close(() => {
     logger.log("HTTP server closed");
   });
 
