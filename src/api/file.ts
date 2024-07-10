@@ -1,8 +1,8 @@
 import { Request } from "express";
 import { UrlSafeBase64 } from "../musa-core-import";
 
-import { app } from "../express";
 import { cacheControlMiddleware } from "../cacheControlMiddleware";
+import { app } from "../express";
 
 const SIX_MONTHS_IN_SECONDS = 60 * 60 * 24 * 183;
 const { MUSA_SRC_PATH = "" } = process.env;

@@ -1,9 +1,9 @@
 import { Server } from "http";
 import { errorHandler } from "./errorHandler";
 import { app } from "./express";
+import { logger } from "./logger";
 import { Db, Scanner } from "./musa-core-import";
 import { setImageCollection } from "./repo";
-import { logger } from "./logger";
 
 export * from "./api/album";
 export * from "./api/artist";

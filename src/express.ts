@@ -1,8 +1,8 @@
 import compression from "compression";
 import cors from "cors";
-import express from "express";
 import crypto from "crypto";
 import dotenv from "dotenv";
+import express from "express";
 import path from "path";
 import { logger } from "./logger";
 
