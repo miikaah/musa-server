@@ -47,7 +47,7 @@
     "supertest": "7.0.0",
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
-    "typescript-eslint": "8.0.0-alpha.47",
+    "typescript-eslint": "8.0.0-alpha.54",
     "vitest": "2.0.4"
   }
 }
