@@ -51,11 +51,11 @@ export const start = async () => {
       logger.log(`Serving ${baseUrl}\n`);
     }
 
-    Scanner.update({ musicLibraryPath });
+    await Scanner.update({ musicLibraryPath });
   });
 };
 
-start();
+void start();
 
 process.on("SIGTERM", () => {
   logger.log("Received SIGTERM, shutting down gracefully...");

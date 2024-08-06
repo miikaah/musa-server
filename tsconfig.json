@@ -12,5 +12,5 @@
     "sourceMap": true,
     "strict": true
   },
-  "include": ["./src/**/*.ts"]
+  "include": ["./src/**/*.ts", "eslint.config.mjs"]
 }
