@@ -6,5 +6,11 @@ import { Api } from "../musa-core-import";
 app.get("/audios/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
 
-  res.status(200).json(await Api.getAudioById({ id }));
+  const audio = await Api.findAudioById({ id });
+  if (!audio) {
+    res.status(404).json({ message: "Not found" });
+    return;
+  }
+
+  res.status(200).json(audio);
 });

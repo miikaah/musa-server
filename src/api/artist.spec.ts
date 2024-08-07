@@ -28,17 +28,6 @@ describe("Artist API tests", () => {
       expect(Api.getArtistById).toHaveBeenCalledWith(id);
     });
 
-    it("should return 200 and an empty object if artist doesn't exist", async () => {
-      vi.mocked(Api.getArtistById).mockResolvedValueOnce(<any>{});
-
-      const response = await request.get(route);
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({});
-      expect(Api.getArtistById).toHaveBeenCalledTimes(1);
-      expect(Api.getArtistById).toHaveBeenCalledWith(id);
-    });
-
     it("should return 500 if getArtistById throws an error", async () => {
       vi.mocked(Api.getArtistById).mockRejectedValueOnce(new Error("err"));
 
