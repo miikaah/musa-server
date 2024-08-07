@@ -46,6 +46,7 @@ export const artistAlbumsFixture: ArtistWithEnrichedAlbums = {
           url: "http://100.79.27.108:4200/audio/QW5keSBNY2tlZVxBbmR5IE1jS2VlIC0gQXJ0IG9mIE1vdGlvbiAtIDIwMDVcQW5keSBNY0tlZSAtIEFydCBvZiBNb3Rpb24gLSAwMSAtIEFydCBPZiBNb3Rpb24ubXAz",
           fileUrl:
             "http://100.79.27.108:4200/file/QW5keSBNY2tlZVxBbmR5IE1jS2VlIC0gQXJ0IG9mIE1vdGlvbiAtIDIwMDVcQW5keSBNY0tlZSAtIEFydCBvZiBNb3Rpb24gLSAwMSAtIEFydCBPZiBNb3Rpb24ubXAz",
+          coverUrl: "",
           metadata: {
             track: {
               no: 1,

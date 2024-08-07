@@ -1,4 +1,6 @@
-export const findQueryFixture = {
+import { FindResult } from "@miikaah/musa-core";
+
+export const findQueryFixture: FindResult = {
   artists: [],
   albums: [
     {
@@ -11,7 +13,9 @@ export const findQueryFixture = {
           name: "Elementa",
           track: "01",
           url: "http://100.79.27.108:4200/audio/Q01YXEFsa3V0ZW9zXDAxIC0gRWxlbWVudGEubXAz",
-          fileUrl: "http://100.79.27.108:4200/file/Q01YXEFsa3V0ZW9zXDAxIC0gRWxlbWVudGEubXAz",
+          fileUrl:
+            "http://100.79.27.108:4200/file/Q01YXEFsa3V0ZW9zXDAxIC0gRWxlbWVudGEubXAz",
+          coverUrl: "",
           metadata: {
             track: {
               no: "1",
