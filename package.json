@@ -3,7 +3,6 @@
   "version": "2.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "setup": "shx mkdir dist && shx touch dist/index.js",
     "dev": "env-cmd -f .env.dev nodemon --watch ./src --ext ts --exec ts-node --transpile-only src/index.ts",
