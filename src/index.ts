@@ -1,3 +1,4 @@
+import { execSync } from "child_process";
 import { Server } from "http";
 import { errorHandler } from "./errorHandler";
 import { app } from "./express";
@@ -18,7 +19,15 @@ export * from "./api/static";
 export * from "./api/theme";
 export { app } from "./express";
 
-const { NODE_ENV = "", MUSA_SRC_PATH = "", PORT = 4200, MUSA_BASE_URL } = process.env;
+const {
+  NODE_ENV = "",
+  MUSA_SRC_PATH = "",
+  PORT = 4200,
+  MUSA_BASE_URL = "",
+  TAILSCALE_TAILNET = "",
+  TAILSCALE_OAUTH_CLIENT_ID = "",
+  TAILSCALE_OAUTH_CLIENT_SECRET = "",
+} = process.env;
 
 const baseUrl = `${MUSA_BASE_URL}:${PORT}`;
 const musicLibraryPath = MUSA_SRC_PATH;
@@ -53,6 +62,51 @@ export const start = async () => {
 
     await Scanner.update({ musicLibraryPath });
   });
+
+  /**
+   * Tailscale v1.70.0 or some version earlier during summer 2024 started connecting
+   * very slowly from new nodes and long stale old nodes leading to timeouts.
+   * This code mitigates that degradation.
+   *
+   * Help Tailscale set up a new ephemeral connections (to fly.io)
+   * by parsing the result of "tailscale status" by filtering out active and offline conns.
+   * This leaves "-" status which means a new node and "idle". It's ok to ping idle,
+   * it just gets set to active. Fly.io closes correctly even in this case and the status
+   * goes to "idle; offline" which gets filtered out.
+   */
+  if (TAILSCALE_TAILNET && TAILSCALE_OAUTH_CLIENT_ID && TAILSCALE_OAUTH_CLIENT_SECRET) {
+    setInterval(async () => {
+      let linuxIps: string[] = [];
+      try {
+        const musaIp = MUSA_BASE_URL.split("://")[1];
+        const status = execSync("tailscale status").toString().split("\n");
+        linuxIps = status
+          .filter(
+            (s) =>
+              s.includes("linux") &&
+              !s.includes("active") &&
+              !s.includes("offline") &&
+              !s.includes(musaIp),
+          )
+          .flatMap((s) => s.split(" ")[0]);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : JSON.stringify(error);
+        console.log("Failed to get Tailscale status", message);
+      }
+
+      linuxIps.forEach((linuxIp) => {
+        try {
+          const stdout = execSync(`tailscale ping --c 1 ${linuxIp}`);
+          console.log(`Response from tailscale device: ${stdout}`);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : JSON.stringify(error);
+          if (!message.startsWith("Command failed: tailscale ping")) {
+            console.error("Failed to ping tailscale device", message);
+          }
+        }
+      });
+    }, 10_000);
+  }
 };
 
 void start();
