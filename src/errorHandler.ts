@@ -6,7 +6,7 @@ export const errorHandler = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): void => {
   const id = req.headers["x-musa-proxy-request-id"] ?? "";
   const isRangeRequest = Boolean(req.headers["range"]);
 
@@ -24,11 +24,13 @@ export const errorHandler = (
   }
 
   if (res.headersSent) {
-    return next();
+    next();
+    return;
   }
 
   if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
-    return res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
+    return;
   }
 
   res.status(500).json(err);
