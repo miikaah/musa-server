@@ -18,7 +18,7 @@ const getCurrentProfile = async (
   const musaProxyUsername = req.headers["x-musa-proxy-username"] as string;
 
   return (
-    musaProxyUsername ?? Tailscale.getCurrentProfileByIp(req.ip.split(":").pop() ?? "")
+    musaProxyUsername ?? Tailscale.getCurrentProfileByIp(req.ip?.split(":").pop() ?? "")
   );
 };
 

@@ -27,7 +27,7 @@ app.post(
   "/playlists",
   async (req: Request<unknown, unknown, { pathIds: string[] }>, res) => {
     const { pathIds } = req.body;
-    const ip = req.ip.split(":").pop() ?? "";
+    const ip = req.ip?.split(":").pop() ?? "";
     const currentProfile = await Tailscale.getCurrentProfileByIp(ip);
 
     res
