@@ -23,7 +23,7 @@
     "@miikaah/musa-core": "10.5.4",
     "compression": "1.7.5",
     "cors": "2.8.5",
-    "dotenv": "16.4.5",
+    "dotenv": "16.4.7",
     "env-cmd": "10.1.0",
     "express": "5.0.1"
   },
