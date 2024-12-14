@@ -41,7 +41,7 @@
     "eslint": "9.16.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.1",
-    "nodemon": "3.1.7",
+    "nodemon": "3.1.9",
     "prettier": "3.4.2",
     "prettier-plugin-organize-imports": "4.1.0",
     "shx": "0.3.4",
