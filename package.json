@@ -21,7 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "@miikaah/musa-core": "10.6.1",
-    "compression": "1.7.5",
+    "compression": "1.8.0",
     "cors": "2.8.5",
     "dotenv": "16.4.7",
     "env-cmd": "10.1.0",
